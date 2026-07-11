@@ -18,15 +18,16 @@ get_header();
  * Order here is the visual order on the page.
  */
 $sections = array(
-	'hero'     => 'hero',
-	'notices'  => 'notices',
-	'welcome'  => 'welcome',
-	'courses'  => 'courses',
-	'whyus'    => 'whyus',
-	'stats'    => 'stats',
-	'news'     => 'news',
-	'partners' => 'partners',
-	'cta'      => 'cta',
+	'hero'         => 'hero',
+	'notices'      => 'notices',
+	'welcome'      => 'welcome',
+	'courses'      => 'courses',
+	'whyus'        => 'whyus',
+	'stats'        => 'stats',
+	'news'         => 'news',
+	'testimonials' => 'testimonials',
+	'partners'     => 'partners',
+	'cta'          => 'cta',
 );
 
 foreach ( $sections as $slug => $toggle ) {

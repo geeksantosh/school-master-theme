@@ -398,7 +398,19 @@ function school_master_customize_register( $wp_customize ) {
 	$add_toggle( 'section_news_enable', __( 'Enable Latest News', 'school-master' ), 'school_master_news', true );
 	$add_text( 'news_title', __( 'Section Title', 'school-master' ), 'school_master_news', __( 'Latest News', 'school-master' ) );
 
-	// 4h. Partners.
+	// 4h. Testimonials.
+	$wp_customize->add_section(
+		'school_master_testimonials',
+		array(
+			'title' => __( 'Testimonials', 'school-master' ),
+			'panel' => 'school_master_homepage',
+		)
+	);
+	$add_toggle( 'section_testimonials_enable', __( 'Enable Testimonials', 'school-master' ), 'school_master_testimonials', true );
+	$add_text( 'testimonials_title', __( 'Section Title', 'school-master' ), 'school_master_testimonials', __( 'What People Say', 'school-master' ) );
+	school_master_number_control( $wp_customize, 'testimonials_count', __( 'Number of testimonials', 'school-master' ), 'school_master_testimonials', 3 );
+
+	// 4i. Partners.
 	$wp_customize->add_section(
 		'school_master_partners',
 		array(
@@ -409,7 +421,7 @@ function school_master_customize_register( $wp_customize ) {
 	$add_toggle( 'section_partners_enable', __( 'Enable Partners', 'school-master' ), 'school_master_partners', true );
 	$add_text( 'partners_title', __( 'Section Title', 'school-master' ), 'school_master_partners', __( 'Our Partners', 'school-master' ) );
 
-	// 4i. Call to action.
+	// 4j. Call to action.
 	$wp_customize->add_section(
 		'school_master_cta',
 		array(

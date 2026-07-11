@@ -65,7 +65,7 @@ function school_master_demo_page() {
 		<?php endif; ?>
 
 		<p style="max-width:640px">
-			<?php esc_html_e( 'This creates sample courses, notices, faculty, events and downloads, fills in the homepage sections, and builds a starter navigation menu. It is meant as a starting point — edit or delete anything afterwards.', 'school-master' ); ?>
+			<?php esc_html_e( 'This creates sample courses, notices, faculty, events, downloads and testimonials, fills in the homepage sections, and builds a starter navigation menu. It is meant as a starting point — edit or delete anything afterwards.', 'school-master' ); ?>
 		</p>
 
 		<?php if ( $imported ) : ?>
@@ -212,6 +212,7 @@ function school_master_demo_import() {
 	school_master_demo_seed_faculty( $data );
 	school_master_demo_seed_events( $data );
 	school_master_demo_seed_downloads( $data );
+	school_master_demo_seed_testimonials( $data );
 	school_master_demo_seed_settings();
 	school_master_demo_seed_pages( $data );
 	school_master_demo_seed_menu( $data );
@@ -357,6 +358,36 @@ function school_master_demo_seed_downloads( array &$data ) {
 
 	foreach ( $downloads as $title ) {
 		school_master_demo_insert( 'sm_download', $title, $body, array(), $data );
+	}
+}
+
+/**
+ * Seed a few testimonials for the homepage Testimonials section.
+ *
+ * @param array $data Tracking array (by reference).
+ * @return void
+ */
+function school_master_demo_seed_testimonials( array &$data ) {
+	$testimonials = array(
+		array(
+			'name'  => __( 'Sujata Adhikari', 'school-master' ),
+			'role'  => __( 'Alumni, Computer Engineering 2021', 'school-master' ),
+			'quote' => __( 'The practical, hands-on training gave me the confidence to walk into my first job ready to contribute from day one. The faculty genuinely cared about our progress.', 'school-master' ),
+		),
+		array(
+			'name'  => __( 'Prakash Tamang', 'school-master' ),
+			'role'  => __( 'Parent', 'school-master' ),
+			'quote' => __( 'I have seen my daughter grow in both skill and character here. The teachers are approachable and the campus feels safe and supportive.', 'school-master' ),
+		),
+		array(
+			'name'  => __( 'Nisha Karki', 'school-master' ),
+			'role'  => __( 'Current Student, Civil Engineering', 'school-master' ),
+			'quote' => __( 'Modern labs, real projects and mentors who push you to do your best — I could not have asked for a better place to study.', 'school-master' ),
+		),
+	);
+
+	foreach ( $testimonials as $item ) {
+		school_master_demo_insert( 'sm_testimonial', $item['name'], $item['quote'], array( 'author_role' => $item['role'] ), $data );
 	}
 }
 

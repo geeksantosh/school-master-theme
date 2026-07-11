@@ -63,7 +63,8 @@ Core. Follow it and you are set.
 Want to see the finished layout before you start? With the theme **and** the
 *School Master Core* plugin both active, go to **Appearance → Demo Content** and
 click **Import Demo Content**. This seeds sample courses, notices, faculty,
-events and downloads, fills in the homepage sections and statistics, sets a
+events, downloads and testimonials, fills in the homepage sections and
+statistics, sets a
 static front page and builds a starter navigation menu — so your homepage looks
 complete immediately. Edit or delete any of it afterwards.
 
@@ -167,8 +168,10 @@ order below:
 6. **Statistics Counters** — up to four animated number counters (e.g.
    "1200 Graduates"). Each has a number and a label.
 7. **Latest News** — recent blog Posts.
-8. **Partners** — logos from the Partners content type.
-9. **Call to Action** — a closing banner with a button (e.g. "Ready to Apply?").
+8. **Testimonials** — quotes from the Testimonials content type (name, role
+   and optional photo). Set the section title and how many to show.
+9. **Partners** — logos from the Partners content type.
+10. **Call to Action** — a closing banner with a button (e.g. "Ready to Apply?").
 
 ### Footer
 - Custom copyright text (leave blank to fall back to the site name + year).
@@ -188,7 +191,7 @@ The companion plugin adds these items to the wp-admin menu. Each has its own
 | **Events** | Start Date, End Date, Location | — | `/events/` |
 | **Gallery** | (uses the featured image) | Albums | `/gallery/` |
 | **Downloads** | File | Download Categories | `/downloads/` |
-| **Testimonials** | Author Role | — | shown on-site only |
+| **Testimonials** | Author Role | — | Testimonials homepage section |
 | **Partners** | Website URL | — | shown on-site only |
 
 Tips:
@@ -241,7 +244,7 @@ dashboard notice links you straight to it.
 
 **A homepage section is missing.** Open *Customize → Homepage Sections* and check
 that section's **Enable** toggle. Some sections (Notices, Courses, News,
-Partners) also need at least one matching item to display.
+Testimonials, Partners) also need at least one matching item to display.
 
 **An archive page shows "Page not found."** Go to *Settings → Permalinks* and
 click **Save Changes** once. This refreshes WordPress's URL rules.

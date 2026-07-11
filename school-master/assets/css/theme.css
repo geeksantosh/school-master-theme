@@ -203,6 +203,19 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .partner:hover { filter: none; opacity: 1; }
 
 /* -------------------------------------------------------------------------
+ * Testimonials
+ * ---------------------------------------------------------------------- */
+.card-grid--testimonials { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+.testimonial { padding: 1.75rem; gap: 1.25rem; }
+.testimonial__quote { margin: 0; font-size: 1rem; line-height: 1.65; color: var(--sm-text); }
+.testimonial__quote::before { content: "\201C"; color: var(--sm-secondary); font-size: 2.4rem; line-height: 0; vertical-align: -.5rem; margin-right: .15rem; font-family: Georgia, "Times New Roman", serif; }
+.testimonial__author { display: flex; align-items: center; gap: .85rem; margin-top: auto; }
+.testimonial__avatar img { width: 52px; height: 52px; border-radius: 999px; object-fit: cover; display: block; }
+.testimonial__meta { display: flex; flex-direction: column; }
+.testimonial__name { font-weight: 700; color: var(--sm-dark); }
+.testimonial__role { font-size: .85rem; color: var(--sm-muted); }
+
+/* -------------------------------------------------------------------------
  * CTA
  * ---------------------------------------------------------------------- */
 .cta { background: var(--sm-dark) !important; color: #fff; text-align: center; }
