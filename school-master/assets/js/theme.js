@@ -13,6 +13,7 @@
 		setupDropdowns();
 		setupCounters();
 		setupNoticePopup();
+		setupTestimonialsScroll();
 	} );
 
 	/**
@@ -227,5 +228,92 @@
 		lastFocus = document.activeElement;
 		document.addEventListener( 'keydown', onKey );
 		window.setTimeout( showNext, 700 );
+	}
+
+	/**
+	 * Auto-scroll the testimonials row only when the cards overflow the
+	 * viewport. When they overflow, the original cards are cloned once so the
+	 * CSS marquee (translateX 0 -> -50%) loops seamlessly; when they fit, the
+	 * row is left centered and static. Re-evaluated on resize. Visitors who
+	 * prefer reduced motion keep a plain, manually-scrollable row (no clones).
+	 */
+	function setupTestimonialsScroll() {
+		var viewports = document.querySelectorAll( '[data-testimonials-viewport]' );
+
+		if ( ! viewports.length ) {
+			return;
+		}
+
+		var prefersReduced = window.matchMedia &&
+			window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
+
+		if ( prefersReduced ) {
+			return;
+		}
+
+		Array.prototype.forEach.call( viewports, function ( viewport ) {
+			var track = viewport.querySelector( '[data-testimonials-track]' );
+
+			if ( ! track ) {
+				return;
+			}
+
+			var originals = Array.prototype.slice.call( track.children );
+			var cloned = false;
+
+			var addClones = function () {
+				originals.forEach( function ( el ) {
+					var clone = el.cloneNode( true );
+					clone.setAttribute( 'aria-hidden', 'true' );
+					clone.setAttribute( 'tabindex', '-1' );
+					track.appendChild( clone );
+				} );
+				cloned = true;
+			};
+
+			var removeClones = function () {
+				while ( track.children.length > originals.length ) {
+					track.removeChild( track.lastChild );
+				}
+				cloned = false;
+			};
+
+			var evaluate = function () {
+				// Measure the true content width from the originals only.
+				var setWidth = originals.reduce( function ( sum, el ) {
+					return sum + el.getBoundingClientRect().width;
+				}, 0 );
+
+				var overflows = setWidth > viewport.clientWidth + 1;
+
+				if ( overflows ) {
+					if ( ! cloned ) {
+						addClones();
+					}
+					// Keep a roughly constant speed (~70px/sec) regardless of count.
+					var duration = Math.max( 20, Math.round( setWidth / 70 ) );
+					track.style.setProperty( '--sm-testimonials-duration', duration + 's' );
+					viewport.classList.add( 'is-scrolling' );
+				} else {
+					viewport.classList.remove( 'is-scrolling' );
+					if ( cloned ) {
+						removeClones();
+					}
+				}
+			};
+
+			evaluate();
+
+			var resizeTimer;
+			window.addEventListener( 'resize', function () {
+				window.clearTimeout( resizeTimer );
+				// Measure the originals cleanly by dropping clones first.
+				if ( cloned ) {
+					viewport.classList.remove( 'is-scrolling' );
+					removeClones();
+				}
+				resizeTimer = window.setTimeout( evaluate, 200 );
+			} );
+		} );
 	}
 }() );

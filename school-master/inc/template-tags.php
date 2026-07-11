@@ -29,6 +29,36 @@ function school_master_section_enabled( $section ) {
 }
 
 /**
+ * Build up to two uppercase initials from a name.
+ *
+ * Used as a fallback avatar when an item (e.g. a testimonial) has no photo.
+ *
+ * @param string $name Full name.
+ * @return string One or two initials, or an empty string.
+ */
+function school_master_initials( $name ) {
+	$name = trim( wp_strip_all_tags( (string) $name ) );
+
+	if ( '' === $name ) {
+		return '';
+	}
+
+	$initials = '';
+
+	foreach ( preg_split( '/\s+/', $name ) as $word ) {
+		if ( '' === $word ) {
+			continue;
+		}
+		$initials .= mb_substr( $word, 0, 1 );
+		if ( mb_strlen( $initials ) >= 2 ) {
+			break;
+		}
+	}
+
+	return function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $initials ) : strtoupper( $initials );
+}
+
+/**
  * Output the site logo, falling back to the site title text.
  *
  * @return void

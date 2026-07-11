@@ -35,30 +35,41 @@ if ( ! $testimonials->have_posts() ) {
 	<div class="container">
 		<h2 class="section-title section-title--center"><?php echo esc_html( $title ); ?></h2>
 
-		<div class="card-grid card-grid--testimonials">
-			<?php
-			while ( $testimonials->have_posts() ) :
-				$testimonials->the_post();
-				$role = smcore_get_meta( 'author_role' );
-				?>
-				<article class="card testimonial">
-					<blockquote class="testimonial__quote"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ) ); ?></blockquote>
-
-					<div class="testimonial__author">
-						<?php if ( has_post_thumbnail() ) : ?>
-							<span class="testimonial__avatar">
-								<?php the_post_thumbnail( 'thumbnail', array( 'loading' => 'lazy', 'alt' => get_the_title() ) ); ?>
-							</span>
-						<?php endif; ?>
-						<span class="testimonial__meta">
+		<?php
+		/*
+		 * The track holds every card in a single row. If they overflow the
+		 * viewport, theme.js turns on a gentle, auto-scrolling marquee
+		 * (paused on hover, disabled for reduced-motion visitors); when they
+		 * fit, the row simply stays centered.
+		 */
+		?>
+		<div class="testimonials__viewport" data-testimonials-viewport>
+			<div class="testimonials__track" data-testimonials-track>
+				<?php
+				while ( $testimonials->have_posts() ) :
+					$testimonials->the_post();
+					$role     = smcore_get_meta( 'author_role' );
+					$initials = school_master_initials( get_the_title() );
+					?>
+					<article class="card testimonial">
+						<div class="testimonial__head">
+							<?php if ( has_post_thumbnail() ) : ?>
+								<span class="testimonial__avatar">
+									<?php the_post_thumbnail( 'thumbnail', array( 'loading' => 'lazy', 'alt' => get_the_title() ) ); ?>
+								</span>
+							<?php elseif ( $initials ) : ?>
+								<span class="testimonial__avatar testimonial__avatar--placeholder" aria-hidden="true"><?php echo esc_html( $initials ); ?></span>
+							<?php endif; ?>
 							<span class="testimonial__name"><?php the_title(); ?></span>
 							<?php if ( $role ) : ?>
 								<span class="testimonial__role"><?php echo esc_html( $role ); ?></span>
 							<?php endif; ?>
-						</span>
-					</div>
-				</article>
-			<?php endwhile; ?>
+						</div>
+
+						<blockquote class="testimonial__quote"><?php echo esc_html( wp_strip_all_tags( get_the_excerpt() ) ); ?></blockquote>
+					</article>
+				<?php endwhile; ?>
+			</div>
 		</div>
 	</div>
 </section>
