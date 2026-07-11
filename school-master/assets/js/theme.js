@@ -13,7 +13,7 @@
 		setupDropdowns();
 		setupCounters();
 		setupNoticePopup();
-		setupTestimonialsScroll();
+		setupMarquees();
 	} );
 
 	/**
@@ -231,14 +231,15 @@
 	}
 
 	/**
-	 * Auto-scroll the testimonials row only when the cards overflow the
-	 * viewport. When they overflow, the original cards are cloned once so the
-	 * CSS marquee (translateX 0 -> -50%) loops seamlessly; when they fit, the
-	 * row is left centered and static. Re-evaluated on resize. Visitors who
-	 * prefer reduced motion keep a plain, manually-scrollable row (no clones).
+	 * Auto-scroll a card row (testimonials, partners, …) only when the cards
+	 * overflow the viewport. When they overflow, the original cards are cloned
+	 * once so the CSS marquee (translateX 0 -> -50%) loops seamlessly; when
+	 * they fit, the row is left centered and static. Re-evaluated on resize.
+	 * Visitors who prefer reduced motion keep a plain, manually-scrollable
+	 * row (no clones).
 	 */
-	function setupTestimonialsScroll() {
-		var viewports = document.querySelectorAll( '[data-testimonials-viewport]' );
+	function setupMarquees() {
+		var viewports = document.querySelectorAll( '[data-marquee-viewport]' );
 
 		if ( ! viewports.length ) {
 			return;
@@ -252,7 +253,7 @@
 		}
 
 		Array.prototype.forEach.call( viewports, function ( viewport ) {
-			var track = viewport.querySelector( '[data-testimonials-track]' );
+			var track = viewport.querySelector( '[data-marquee-track]' );
 
 			if ( ! track ) {
 				return;
@@ -292,7 +293,7 @@
 					}
 					// Keep a roughly constant speed (~70px/sec) regardless of count.
 					var duration = Math.max( 20, Math.round( setWidth / 70 ) );
-					track.style.setProperty( '--sm-testimonials-duration', duration + 's' );
+					track.style.setProperty( '--sm-marquee-duration', duration + 's' );
 					viewport.classList.add( 'is-scrolling' );
 				} else {
 					viewport.classList.remove( 'is-scrolling' );

@@ -43,8 +43,8 @@ if ( ! $testimonials->have_posts() ) {
 		 * fit, the row simply stays centered.
 		 */
 		?>
-		<div class="testimonials__viewport" data-testimonials-viewport>
-			<div class="testimonials__track" data-testimonials-track>
+		<div class="testimonials__viewport" data-marquee-viewport>
+			<div class="testimonials__track" data-marquee-track>
 				<?php
 				while ( $testimonials->have_posts() ) :
 					$testimonials->the_post();

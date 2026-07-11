@@ -1,6 +1,10 @@
 <?php
 /**
- * Homepage section: Partners / Affiliations logo grid.
+ * Homepage section: Partners / Affiliations logo row.
+ *
+ * Logos sit in a single row. If they overflow the screen, theme.js turns
+ * the row into a gentle auto-scrolling marquee (same behaviour as the
+ * Testimonials section); when they fit, the row simply stays centered.
  *
  * @package SchoolMaster
  */
@@ -30,29 +34,31 @@ if ( ! $partners->have_posts() ) {
 	<div class="container">
 		<h2 class="section-title section-title--center"><?php echo esc_html( $title ); ?></h2>
 
-		<div class="partner-grid">
-			<?php
-			while ( $partners->have_posts() ) :
-				$partners->the_post();
+		<div class="partners__viewport" data-marquee-viewport>
+			<div class="partners__track" data-marquee-track>
+				<?php
+				while ( $partners->have_posts() ) :
+					$partners->the_post();
 
-				if ( ! has_post_thumbnail() ) {
-					continue;
-				}
+					if ( ! has_post_thumbnail() ) {
+						continue;
+					}
 
-				$url  = smcore_get_meta( 'url' );
-				$logo = get_the_post_thumbnail( get_the_ID(), 'medium', array( 'loading' => 'lazy', 'alt' => get_the_title() ) );
+					$url  = smcore_get_meta( 'url' );
+					$logo = get_the_post_thumbnail( get_the_ID(), 'medium', array( 'loading' => 'lazy', 'alt' => get_the_title() ) );
 
-				if ( $url ) {
-					printf(
-						'<a class="partner" href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
-						esc_url( $url ),
-						$logo // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_the_post_thumbnail returns safe markup.
-					);
-				} else {
-					printf( '<span class="partner">%s</span>', $logo ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				}
-			endwhile;
-			?>
+					if ( $url ) {
+						printf(
+							'<a class="partner" href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+							esc_url( $url ),
+							$logo // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_the_post_thumbnail returns safe markup.
+						);
+					} else {
+						printf( '<span class="partner">%s</span>', $logo ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					}
+				endwhile;
+				?>
+			</div>
 		</div>
 	</div>
 </section>

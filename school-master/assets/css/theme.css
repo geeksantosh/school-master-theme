@@ -198,18 +198,34 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 /* -------------------------------------------------------------------------
  * Partners
  * ---------------------------------------------------------------------- */
-.partner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1.25rem; align-items: center; }
-.partner { display: flex; align-items: center; justify-content: center; padding: 1rem; background: #fff; border-radius: var(--sm-radius); border: 1px solid var(--sm-border); filter: grayscale(1); opacity: .8; transition: all .2s ease; }
+.partner {
+	flex: 0 0 auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: min(230px, 70vw);
+	height: 130px;
+	padding: 1.5rem 1.75rem;
+	background: #fff;
+	border-radius: var(--sm-radius);
+	border: 1px solid var(--sm-border);
+	filter: grayscale(1);
+	opacity: .8;
+	transition: all .2s ease;
+}
 .partner:hover { filter: none; opacity: 1; }
+.partner img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
 
 /* -------------------------------------------------------------------------
- * Testimonials
+ * Auto-scrolling card rows (testimonials, partners)
+ *
+ * Shared viewport/track pair. The row scrolls manually by default (used
+ * with no JS / reduced motion); when the cards overflow, theme.js clones
+ * them and switches on a seamless marquee, paused on hover/focus.
  * ---------------------------------------------------------------------- */
-/* Manual horizontal scroll by default (used with no JS / reduced motion). */
-.testimonials__viewport { position: relative; overflow-x: auto; }
-/* theme.js swaps to a clipped, auto-scrolling marquee when cards overflow. */
-.testimonials__viewport.is-scrolling { overflow: hidden; }
-.testimonials__track {
+[data-marquee-viewport] { position: relative; overflow-x: auto; }
+[data-marquee-viewport].is-scrolling { overflow: hidden; }
+[data-marquee-track] {
 	display: flex;
 	gap: 1.5rem;
 	justify-content: safe center;
@@ -219,17 +235,24 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 	margin: 0 auto;
 	padding: .25rem;
 }
-/* When theme.js detects the cards overflow, it clones them and turns this on. */
-.testimonials__viewport.is-scrolling .testimonials__track {
+[data-marquee-viewport].is-scrolling [data-marquee-track] {
 	gap: 0;
 	justify-content: flex-start;
 	max-width: none;
 	margin: 0;
-	animation: sm-testimonials-scroll var(--sm-testimonials-duration, 40s) linear infinite;
+	animation: sm-marquee-scroll var(--sm-marquee-duration, 40s) linear infinite;
 }
-.testimonials__viewport.is-scrolling .testimonial { margin-right: 1.5rem; }
-.testimonials__viewport.is-scrolling:hover .testimonials__track,
-.testimonials__viewport.is-scrolling:focus-within .testimonials__track { animation-play-state: paused; }
+[data-marquee-viewport].is-scrolling [data-marquee-track] > * { margin-right: 1.5rem; }
+[data-marquee-viewport].is-scrolling:hover [data-marquee-track],
+[data-marquee-viewport].is-scrolling:focus-within [data-marquee-track] { animation-play-state: paused; }
+@keyframes sm-marquee-scroll {
+	from { transform: translateX(0); }
+	to { transform: translateX(-50%); }
+}
+
+/* -------------------------------------------------------------------------
+ * Testimonials
+ * ---------------------------------------------------------------------- */
 .testimonial {
 	flex: 0 0 auto;
 	width: min(340px, 82vw);
@@ -265,10 +288,6 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .testimonial__name { font-weight: 700; color: var(--sm-dark); font-size: 1.1rem; }
 .testimonial__role { color: var(--sm-primary); font-size: .9rem; font-weight: 600; }
 .testimonial__quote { margin: 0; font-size: .98rem; line-height: 1.65; color: var(--sm-muted); }
-@keyframes sm-testimonials-scroll {
-	from { transform: translateX(0); }
-	to { transform: translateX(-50%); }
-}
 
 /* -------------------------------------------------------------------------
  * CTA
@@ -517,10 +536,11 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 	.notice-bar__track[aria-hidden="true"] { display: none; }
 	.sm-popup, .sm-popup__dialog { transition: none; }
 
-	/* Testimonials: no auto-scroll — the base viewport already allows a
-	   manual horizontal scroll; just make the first card reachable. */
-	.testimonials__track { justify-content: flex-start; }
-	.testimonials__viewport.is-scrolling .testimonials__track { animation: none; }
+	/* Marquee rows (testimonials, partners): no auto-scroll — the base
+	   viewport already allows a manual horizontal scroll; just make the
+	   first card reachable. */
+	[data-marquee-track] { justify-content: flex-start; }
+	[data-marquee-viewport].is-scrolling [data-marquee-track] { animation: none; }
 }
 
 @media (max-width: 768px) {
