@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor / IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+
+# Logs & temp
+*.log
+*.tmp
+
+# Dependencies / build (in case tooling is added later)
+node_modules/
+vendor/
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
