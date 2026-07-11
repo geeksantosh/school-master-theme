@@ -180,6 +180,9 @@ order below:
 
 ### Footer
 - Custom copyright text (leave blank to fall back to the site name + year).
+- **Credit Text** — a short "Developed by …" line shown after the copyright.
+  Leave it blank to hide the credit entirely. An optional **Credit URL** turns
+  the text into a link (opens in a new tab).
 
 ---
 

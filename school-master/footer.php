@@ -43,6 +43,20 @@ $has_footer_widgets = is_active_sidebar( 'footer-1' ) || is_active_sidebar( 'foo
 							esc_html( get_bloginfo( 'name' ) )
 						);
 					}
+
+					$credit_text = school_master_option( 'footer_credit_text', 'Developed by Santosh Adhikari' );
+					$credit_url  = school_master_option( 'footer_credit_url' );
+
+					if ( $credit_text ) {
+						$credit = $credit_url
+							? sprintf(
+								'<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+								esc_url( $credit_url ),
+								esc_html( $credit_text )
+							)
+							: esc_html( $credit_text );
+						printf( '<span class="site-footer__credit">%s</span>', $credit ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
+					}
 					?>
 				</div>
 				<div class="site-footer__social">

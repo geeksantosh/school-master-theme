@@ -337,6 +337,9 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 
 .site-footer__bar { background: #071a33; color: rgba(255,255,255,.7); font-size: .85rem; }
 .site-footer__bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 20px; flex-wrap: wrap; }
+.site-footer__credit { display: inline-block; margin-left: .5rem; padding-left: .75rem; border-left: 1px solid rgba(255,255,255,.25); color: rgba(255,255,255,.55); }
+.site-footer__credit a { color: rgba(255,255,255,.75); text-decoration: none; }
+.site-footer__credit a:hover, .site-footer__credit a:focus { color: var(--sm-secondary); text-decoration: underline; }
 
 .social-links { list-style: none; display: flex; gap: .5rem; margin: 0; padding: 0; }
 .social-links a { display: inline-flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; transition: background .2s ease, transform .2s ease; }
