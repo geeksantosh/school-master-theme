@@ -156,11 +156,11 @@ function school_master_customize_register( $wp_customize ) {
 		'school_master_popup_source',
 		array(
 			'label'       => __( 'Popup content', 'school-master' ),
-			'description' => __( '"Latest important notice" shows your most recent notice marked important. "Custom message" uses the fields below.', 'school-master' ),
+			'description' => __( '"Important notices" pops up each notice marked important (newest first, one at a time) until its optional "Popup until" date passes. "Custom message" uses the fields below.', 'school-master' ),
 			'section'     => 'school_master_notice_bar',
 			'type'        => 'select',
 			'choices'     => array(
-				'important' => __( 'Latest important notice', 'school-master' ),
+				'important' => __( 'Important notices', 'school-master' ),
 				'custom'    => __( 'Custom message', 'school-master' ),
 			),
 		)

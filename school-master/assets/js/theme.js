@@ -102,71 +102,130 @@
 	}
 
 	/**
-	 * Reveal the first-visit notice popup once per browser session. The popup
-	 * is keyed by a content signature (data-popup-id), so an updated message
-	 * shows again even to a visitor who dismissed the previous one.
+	 * Reveal the first-visit notice popups once per browser session.
+	 *
+	 * The markup may contain several cards (one per important notice). Cards
+	 * are shown one at a time; closing one reveals the next, and once all are
+	 * closed nothing more appears. Each card is keyed by a content signature
+	 * (data-popup-id) that is recorded in sessionStorage on dismissal, so a
+	 * dismissed notice never re-pops for the session — including when the
+	 * visitor follows its "Read more" link (data-popup-read). An updated card
+	 * gets a new signature, so it still shows to a visitor who dismissed the
+	 * previous version.
 	 */
 	function setupNoticePopup() {
-		var popup = document.querySelector( '.sm-popup' );
+		var stack = document.querySelector( '[data-popup-stack]' );
 
-		if ( ! popup ) {
+		if ( ! stack ) {
 			return;
 		}
 
-		var id = popup.getAttribute( 'data-popup-id' ) || '';
+		var popups = Array.prototype.slice.call( stack.querySelectorAll( '.sm-popup' ) );
+
+		if ( ! popups.length ) {
+			return;
+		}
+
 		var storeKey = 'smNoticePopupDismissed';
 		var lastFocus = null;
+		var current = null;
 
-		var dismissed = '';
-		try {
-			dismissed = window.sessionStorage.getItem( storeKey ) || '';
-		} catch ( e ) {
-			dismissed = '';
-		}
-
-		if ( dismissed === id && id ) {
-			return;
-		}
-
-		var close = function () {
-			popup.classList.remove( 'is-open' );
-			popup.setAttribute( 'hidden', 'hidden' );
-			document.removeEventListener( 'keydown', onKey );
+		var readDismissed = function () {
 			try {
-				window.sessionStorage.setItem( storeKey, id );
-			} catch ( e ) {}
-			if ( lastFocus && lastFocus.focus ) {
-				lastFocus.focus();
+				var raw = window.sessionStorage.getItem( storeKey );
+				var list = raw ? JSON.parse( raw ) : [];
+				return Array.isArray( list ) ? list : [];
+			} catch ( e ) {
+				// Older sessions stored a bare string; treat as nothing dismissed.
+				return [];
 			}
 		};
+
+		var addDismissed = function ( id ) {
+			if ( ! id ) {
+				return;
+			}
+			var list = readDismissed();
+			if ( list.indexOf( id ) === -1 ) {
+				list.push( id );
+			}
+			try {
+				window.sessionStorage.setItem( storeKey, JSON.stringify( list ) );
+			} catch ( e ) {}
+		};
+
+		var dismissed = readDismissed();
+		var queue = popups.filter( function ( el ) {
+			var id = el.getAttribute( 'data-popup-id' ) || '';
+			return id && dismissed.indexOf( id ) === -1;
+		} );
+
+		if ( ! queue.length ) {
+			return;
+		}
 
 		var onKey = function ( e ) {
 			if ( 'Escape' === e.key || 'Esc' === e.key ) {
-				close();
+				dismissCurrent();
 			}
 		};
 
-		var open = function () {
-			lastFocus = document.activeElement;
-			popup.removeAttribute( 'hidden' );
-			// Force a reflow so the CSS transition runs from the hidden state.
-			void popup.offsetWidth;
-			popup.classList.add( 'is-open' );
-			document.addEventListener( 'keydown', onKey );
+		var hide = function ( popup ) {
+			popup.classList.remove( 'is-open' );
+			popup.setAttribute( 'hidden', 'hidden' );
+		};
 
-			var closeBtn = popup.querySelector( '.sm-popup__close' );
+		var showNext = function () {
+			current = queue.shift();
+
+			if ( ! current ) {
+				document.removeEventListener( 'keydown', onKey );
+				if ( lastFocus && lastFocus.focus ) {
+					lastFocus.focus();
+				}
+				return;
+			}
+
+			current.removeAttribute( 'hidden' );
+			// Force a reflow so the CSS transition runs from the hidden state.
+			void current.offsetWidth;
+			current.classList.add( 'is-open' );
+
+			var closeBtn = current.querySelector( '.sm-popup__close' );
 			if ( closeBtn ) {
 				closeBtn.focus();
 			}
 		};
 
-		Array.prototype.forEach.call(
-			popup.querySelectorAll( '[data-popup-close]' ),
-			function ( el ) {
-				el.addEventListener( 'click', close );
+		var dismissCurrent = function () {
+			if ( ! current ) {
+				return;
 			}
-		);
+			addDismissed( current.getAttribute( 'data-popup-id' ) || '' );
+			hide( current );
+			showNext();
+		};
 
-		window.setTimeout( open, 700 );
+		// Wire every card up front. Closing (overlay, X, Esc) advances the
+		// queue; "Read more" only records the dismissal, then navigates.
+		popups.forEach( function ( popup ) {
+			Array.prototype.forEach.call(
+				popup.querySelectorAll( '[data-popup-close]' ),
+				function ( el ) {
+					el.addEventListener( 'click', dismissCurrent );
+				}
+			);
+
+			var readLink = popup.querySelector( '[data-popup-read]' );
+			if ( readLink ) {
+				readLink.addEventListener( 'click', function () {
+					addDismissed( popup.getAttribute( 'data-popup-id' ) || '' );
+				} );
+			}
+		} );
+
+		lastFocus = document.activeElement;
+		document.addEventListener( 'keydown', onKey );
+		window.setTimeout( showNext, 700 );
 	}
 }() );

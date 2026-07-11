@@ -433,10 +433,13 @@ function school_master_topbar_buttons() {
 /**
  * Render the first-visit notice popup markup (hidden until JS reveals it).
  *
- * Content is either the latest important notice (falling back to the newest
- * notice) or a custom message from the Customizer. A short content signature
- * is emitted as `data-popup-id` so the popup reappears when the message
- * changes even if a visitor dismissed the previous one.
+ * Content is either a custom message from the Customizer (one card) or every
+ * important notice that has not passed its "Popup until" date (one card each,
+ * newest first). The JS shows the cards one at a time, remembering which have
+ * been dismissed for the browser session so a notice never re-pops after it is
+ * closed — including when a visitor follows its "Read more" link. A short
+ * content signature is emitted as `data-popup-id` so a card reappears when its
+ * message changes even if a visitor dismissed the previous version.
  *
  * @return void
  */
@@ -446,10 +449,8 @@ function school_master_notice_popup() {
 	}
 
 	$source   = school_master_option( 'popup_source', 'important' );
-	$title    = '';
-	$text     = '';
 	$btn_text = school_master_option( 'popup_btn_text', __( 'Read more', 'school-master' ) );
-	$btn_url  = '';
+	$cards    = array();
 
 	if ( 'custom' === $source ) {
 		$text = trim( (string) school_master_option( 'popup_text' ) );
@@ -458,8 +459,12 @@ function school_master_notice_popup() {
 			return; // Nothing to show.
 		}
 
-		$title   = school_master_option( 'popup_title', __( 'Important Notice', 'school-master' ) );
-		$btn_url = school_master_option( 'popup_btn_url' );
+		$cards[] = array(
+			'title'      => school_master_option( 'popup_title', __( 'Important Notice', 'school-master' ) ),
+			'text'       => $text,
+			'btn_url'    => school_master_option( 'popup_btn_url' ),
+			'attachment' => '',
+		);
 	} else {
 		$query = school_master_notices_query( 20 );
 
@@ -467,39 +472,128 @@ function school_master_notice_popup() {
 			return;
 		}
 
-		// Prefer the latest important notice; fall back to the newest notice.
-		$chosen = 0;
+		$today = current_time( 'Y-m-d' );
+
+		// One card per important notice that has not passed its "Popup until"
+		// date. The shared query already floats important notices to the top.
 		foreach ( $query->posts as $post_obj ) {
-			if ( get_post_meta( $post_obj->ID, '_sm_is_important', true ) ) {
-				$chosen = $post_obj->ID;
-				break;
+			if ( ! get_post_meta( $post_obj->ID, '_sm_is_important', true ) ) {
+				continue;
 			}
-		}
-		if ( ! $chosen ) {
-			$chosen = $query->posts[0]->ID;
+
+			$expiry = (string) get_post_meta( $post_obj->ID, '_sm_popup_expiry', true );
+
+			// A blank date keeps the notice popping up indefinitely.
+			if ( '' !== $expiry && $expiry < $today ) {
+				continue;
+			}
+
+			$cards[] = array(
+				'title'      => get_the_title( $post_obj->ID ),
+				'text'       => wp_strip_all_tags( get_the_excerpt( $post_obj->ID ) ),
+				'btn_url'    => get_permalink( $post_obj->ID ),
+				'attachment' => (string) get_post_meta( $post_obj->ID, '_sm_attachment', true ),
+			);
 		}
 
-		$title   = get_the_title( $chosen );
-		$text    = wp_strip_all_tags( get_the_excerpt( $chosen ) );
-		$btn_url = get_permalink( $chosen );
+		if ( empty( $cards ) ) {
+			return;
+		}
 	}
 
-	$signature = substr( md5( $title . '|' . $text . '|' . $btn_url ), 0, 12 );
+	echo '<div class="sm-popup-stack" data-popup-stack>';
+
+	foreach ( $cards as $card ) {
+		school_master_render_popup_card( $card['title'], $card['text'], $card['btn_url'], $btn_text, $card['attachment'] );
+	}
+
+	echo '</div>';
+}
+
+/**
+ * Render a single notice popup card.
+ *
+ * Each card carries a content signature as its `data-popup-id`, and a stable
+ * per-card title id so multiple cards remain valid, accessible dialogs. The
+ * "Read more" link is tagged `data-popup-read` so the JS can record it as
+ * dismissed before the browser navigates away — otherwise the same notice
+ * would pop again on the page it links to.
+ *
+ * @param string $title      Card heading.
+ * @param string $text       Card body (plain text; paragraph-wrapped on output).
+ * @param string $btn_url    Optional button URL.
+ * @param string $btn_text   Optional button label.
+ * @param string $attachment Optional attachment URL (image preview or file link).
+ * @return void
+ */
+function school_master_render_popup_card( $title, $text, $btn_url, $btn_text, $attachment = '' ) {
+	$signature = substr( md5( $title . '|' . $text . '|' . $btn_url . '|' . $attachment ), 0, 12 );
+	$title_id  = 'sm-popup-title-' . $signature;
 	?>
 	<div class="sm-popup" data-popup-id="<?php echo esc_attr( $signature ); ?>" hidden>
 		<div class="sm-popup__overlay" data-popup-close></div>
-		<div class="sm-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="sm-popup-title">
+		<div class="sm-popup__dialog" role="dialog" aria-modal="true" aria-labelledby="<?php echo esc_attr( $title_id ); ?>">
 			<button type="button" class="sm-popup__close" data-popup-close aria-label="<?php esc_attr_e( 'Close', 'school-master' ); ?>">&times;</button>
 			<?php if ( $title ) : ?>
-				<h2 class="sm-popup__title" id="sm-popup-title"><?php echo esc_html( $title ); ?></h2>
+				<h2 class="sm-popup__title" id="<?php echo esc_attr( $title_id ); ?>"><?php echo esc_html( $title ); ?></h2>
 			<?php endif; ?>
 			<?php if ( $text ) : ?>
 				<div class="sm-popup__body"><?php echo wp_kses_post( wpautop( $text ) ); ?></div>
 			<?php endif; ?>
+			<?php school_master_popup_attachment( $attachment, $title ); ?>
 			<?php if ( $btn_url && $btn_text ) : ?>
-				<a class="btn btn--primary sm-popup__btn" href="<?php echo esc_url( $btn_url ); ?>"><?php echo esc_html( $btn_text ); ?></a>
+				<a class="btn btn--primary sm-popup__btn" href="<?php echo esc_url( $btn_url ); ?>" data-popup-read><?php echo esc_html( $btn_text ); ?></a>
 			<?php endif; ?>
 		</div>
 	</div>
 	<?php
+}
+
+/**
+ * Render a notice's attachment inside the popup.
+ *
+ * Images (jpg/png/gif/webp/svg) show an inline preview that opens full size in
+ * a new tab; any other file (PDF, Doc, …) shows a labelled button. The file
+ * extension is read from the URL, so it works with any media-library upload.
+ *
+ * @param string $url   Attachment URL.
+ * @param string $title Notice title, used for the image alt text.
+ * @return void
+ */
+function school_master_popup_attachment( $url, $title = '' ) {
+	$url = trim( (string) $url );
+
+	if ( '' === $url ) {
+		return;
+	}
+
+	$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+	$ext  = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+
+	echo '<div class="sm-popup__attachment">';
+
+	if ( in_array( $ext, array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg' ), true ) ) {
+		$alt = '' !== $title
+			? sprintf( /* translators: %s: notice title. */ __( 'Attachment for %s', 'school-master' ), $title )
+			: __( 'Notice attachment', 'school-master' );
+
+		printf(
+			'<a class="sm-popup__attachment-image" href="%1$s" target="_blank" rel="noopener"><img src="%1$s" alt="%2$s" loading="lazy" /></a>',
+			esc_url( $url ),
+			esc_attr( $alt )
+		);
+	} else {
+		$label = '' !== $ext
+			/* translators: %s: file type, e.g. PDF. */
+			? sprintf( __( 'View attachment (%s)', 'school-master' ), strtoupper( $ext ) )
+			: __( 'View attachment', 'school-master' );
+
+		printf(
+			'<a class="btn btn--secondary sm-popup__attachment-link" href="%1$s" target="_blank" rel="noopener">%2$s</a>',
+			esc_url( $url ),
+			esc_html( $label )
+		);
+	}
+
+	echo '</div>';
 }

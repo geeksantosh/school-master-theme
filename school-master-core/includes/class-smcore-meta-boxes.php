@@ -98,12 +98,17 @@ class SMCore_Meta_Boxes {
 				),
 			),
 			'sm_notice'      => array(
-				'is_important' => array(
+				'is_important'  => array(
 					'label' => __( 'Mark as important', 'school-master-core' ),
 					'type'  => 'checkbox',
 					'desc'  => __( 'Highlights the notice and pins it to the top.', 'school-master-core' ),
 				),
-				'attachment'   => array(
+				'popup_expiry'  => array(
+					'label' => __( 'Popup until', 'school-master-core' ),
+					'type'  => 'date',
+					'desc'  => __( 'Optional. The first-visit popup stops showing this notice after this date. Leave blank to keep showing it.', 'school-master-core' ),
+				),
+				'attachment'    => array(
 					'label' => __( 'Attachment (PDF/Doc)', 'school-master-core' ),
 					'type'  => 'file',
 				),

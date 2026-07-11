@@ -125,9 +125,17 @@ the *School Master Core* plugin is active and at least one notice exists.
   speed (slow / normal / fast). Important notices get a "New" flag. Motion pauses
   on hover/focus and is disabled for visitors who prefer reduced motion.
 - **First-visit popup** — a dismissible modal shown once per browser session
-  (off by default). Pull the **latest important notice** automatically, or write
-  **custom** title/text and an optional button. If the content changes, visitors
-  who dismissed the old message see the new one.
+  (off by default). Pull **important notices** automatically, or write a
+  **custom** title/text and an optional button.
+  - In *important* mode, **every** notice marked important pops up — one at a
+    time, newest first. Closing one reveals the next; once all are closed (or
+    the visitor follows a "Read more" link), nothing else pops up for that
+    session. A dismissed notice never re-opens on the page it links to.
+  - Give any notice a **"Popup until"** date to stop it popping up after that
+    day; leave it blank to keep showing it. (See *Managing content*.)
+  - A notice's **Attachment** shows inside the popup too: image files appear as
+    a preview, and PDFs/documents get a "View attachment" button.
+  - If a message changes, visitors who dismissed the old version see the new one.
 
 ### Brand Colors
 | Setting | Default | Where it shows |
@@ -175,7 +183,7 @@ The companion plugin adds these items to the wp-admin menu. Each has its own
 | Content type | Extra fields | Categories/Taxonomy | Public archive |
 | --- | --- | --- | --- |
 | **Courses** | Duration, Total Seats, Eligibility, Fee | Course Categories | `/courses/` |
-| **Notices** | Mark as important, Attachment (PDF/Doc) | Notice Categories | `/notices/` |
+| **Notices** | Mark as important, Popup until (date), Attachment (PDF/Doc) | Notice Categories | `/notices/` |
 | **Faculty** | Designation, Qualification, Email, Phone, Facebook URL | Departments | `/faculty/` |
 | **Events** | Start Date, End Date, Location | — | `/events/` |
 | **Gallery** | (uses the featured image) | Albums | `/gallery/` |
@@ -187,7 +195,9 @@ Tips:
 - **Featured images matter.** Faculty photos, course cards, gallery items and
   partner logos all use the *Featured image*. Set one on every item.
 - **Important notices** (checkbox) are highlighted and pinned to the top of the
-  notice list.
+  notice list, and are the ones eligible for the first-visit popup. Use
+  **Popup until** to give an important notice a last day in the popup (blank =
+  no expiry).
 - **Attachments / files** use the WordPress media library — click *Select File*
   in the Details box.
 

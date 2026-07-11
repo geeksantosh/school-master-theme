@@ -429,6 +429,16 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .sm-popup__close:hover, .sm-popup__close:focus { color: var(--sm-dark); }
 .sm-popup__title { margin-top: 0; }
 .sm-popup__body { color: var(--sm-text); margin-bottom: 1.25rem; }
+.sm-popup__attachment { margin: 0 0 1.25rem; }
+.sm-popup__attachment-image { display: block; }
+.sm-popup__attachment-image img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--sm-radius);
+	border: 1px solid var(--sm-border);
+}
+.sm-popup__attachment-link { display: inline-block; }
 .sm-popup__btn { margin-top: .25rem; }
 
 /* Respect visitors who prefer less motion: no scroll, no slide. */
