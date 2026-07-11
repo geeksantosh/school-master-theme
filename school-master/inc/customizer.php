@@ -465,7 +465,7 @@ function school_master_customize_register( $wp_customize ) {
 	$wp_customize->add_setting(
 		'school_master_footer_credit_text',
 		array(
-			'default'           => 'Developed by Yubraj Basnet',
+			'default'           => 'Developed by Santosh Adhikari',
 			'sanitize_callback' => 'sanitize_text_field',
 		)
 	);
