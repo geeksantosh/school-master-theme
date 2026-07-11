@@ -409,6 +409,7 @@ function school_master_customize_register( $wp_customize ) {
 	$add_toggle( 'section_testimonials_enable', __( 'Enable Testimonials', 'school-master' ), 'school_master_testimonials', true );
 	$add_text( 'testimonials_title', __( 'Section Title', 'school-master' ), 'school_master_testimonials', __( 'What People Say', 'school-master' ) );
 	school_master_number_control( $wp_customize, 'testimonials_count', __( 'Number of testimonials', 'school-master' ), 'school_master_testimonials', 3 );
+	$add_toggle( 'testimonials_autoscroll', __( 'Auto-scroll the row when testimonials overflow the screen', 'school-master' ), 'school_master_testimonials', false );
 
 	// 4i. Partners.
 	$wp_customize->add_section(
@@ -420,6 +421,7 @@ function school_master_customize_register( $wp_customize ) {
 	);
 	$add_toggle( 'section_partners_enable', __( 'Enable Partners', 'school-master' ), 'school_master_partners', true );
 	$add_text( 'partners_title', __( 'Section Title', 'school-master' ), 'school_master_partners', __( 'Our Partners', 'school-master' ) );
+	$add_toggle( 'partners_autoscroll', __( 'Auto-scroll the row when logos overflow the screen', 'school-master' ), 'school_master_partners', true );
 
 	// 4j. Call to action.
 	$wp_customize->add_section(

@@ -169,8 +169,13 @@ order below:
    "1200 Graduates"). Each has a number and a label.
 7. **Latest News** — recent blog Posts.
 8. **Testimonials** — quotes from the Testimonials content type (name, role
-   and optional photo). Set the section title and how many to show.
-9. **Partners** — logos from the Partners content type.
+   and optional photo; a colored initials bubble stands in when there is no
+   photo). Set the section title and how many to show. When the cards don't
+   fit on screen the row can be swiped/scrolled — turn on **Auto-scroll** to
+   make it glide by itself instead (pauses on hover).
+9. **Partners** — logos from the Partners content type, shown in one row.
+   When the logos overflow the screen the row auto-scrolls by default;
+   untick **Auto-scroll** to let visitors swipe/scroll it themselves.
 10. **Call to Action** — a closing banner with a button (e.g. "Ready to Apply?").
 
 ### Footer

@@ -235,8 +235,9 @@
 	 * overflow the viewport. When they overflow, the original cards are cloned
 	 * once so the CSS marquee (translateX 0 -> -50%) loops seamlessly; when
 	 * they fit, the row is left centered and static. Re-evaluated on resize.
-	 * Visitors who prefer reduced motion keep a plain, manually-scrollable
-	 * row (no clones).
+	 * Rows marked data-marquee-viewport="manual" (a per-section Customizer
+	 * toggle) and visitors who prefer reduced motion keep a plain,
+	 * manually-scrollable row (no clones).
 	 */
 	function setupMarquees() {
 		var viewports = document.querySelectorAll( '[data-marquee-viewport]' );
@@ -253,6 +254,10 @@
 		}
 
 		Array.prototype.forEach.call( viewports, function ( viewport ) {
+			if ( 'manual' === viewport.getAttribute( 'data-marquee-viewport' ) ) {
+				return;
+			}
+
 			var track = viewport.querySelector( '[data-marquee-track]' );
 
 			if ( ! track ) {

@@ -17,6 +17,7 @@ if ( ! smcore_has_post_type( 'sm_testimonial' ) ) {
 
 $title = school_master_option( 'testimonials_title', __( 'What People Say', 'school-master' ) );
 $count = (int) school_master_option( 'testimonials_count', 3 );
+$mode  = school_master_option( 'testimonials_autoscroll', false ) ? 'auto' : 'manual';
 
 $testimonials = new WP_Query(
 	array(
@@ -37,13 +38,14 @@ if ( ! $testimonials->have_posts() ) {
 
 		<?php
 		/*
-		 * The track holds every card in a single row. If they overflow the
-		 * viewport, theme.js turns on a gentle, auto-scrolling marquee
-		 * (paused on hover, disabled for reduced-motion visitors); when they
-		 * fit, the row simply stays centered.
+		 * The track holds every card in a single row; when the cards
+		 * overflow, the row scrolls. In "auto" mode (Customizer toggle)
+		 * theme.js turns on a gentle marquee — paused on hover, disabled
+		 * for reduced-motion visitors; in "manual" mode (the default)
+		 * visitors swipe or scroll the row themselves.
 		 */
 		?>
-		<div class="testimonials__viewport" data-marquee-viewport>
+		<div class="testimonials__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>">
 			<div class="testimonials__track" data-marquee-track>
 				<?php
 				while ( $testimonials->have_posts() ) :

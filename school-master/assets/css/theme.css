@@ -225,6 +225,9 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
  * ---------------------------------------------------------------------- */
 [data-marquee-viewport] { position: relative; overflow-x: auto; }
 [data-marquee-viewport].is-scrolling { overflow: hidden; }
+/* Manual mode: swiping settles gently on a card. */
+[data-marquee-viewport="manual"] { scroll-snap-type: x proximity; }
+[data-marquee-viewport="manual"] [data-marquee-track] > * { scroll-snap-align: center; }
 [data-marquee-track] {
 	display: flex;
 	gap: 1.5rem;

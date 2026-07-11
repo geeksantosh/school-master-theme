@@ -2,9 +2,10 @@
 /**
  * Homepage section: Partners / Affiliations logo row.
  *
- * Logos sit in a single row. If they overflow the screen, theme.js turns
- * the row into a gentle auto-scrolling marquee (same behaviour as the
- * Testimonials section); when they fit, the row simply stays centered.
+ * Logos sit in a single row; when they fit, the row stays centered. If
+ * they overflow the screen, theme.js turns the row into a gentle
+ * auto-scrolling marquee — unless the Customizer toggle switches the
+ * section to manual (swipe/scroll) mode.
  *
  * @package SchoolMaster
  */
@@ -16,6 +17,7 @@ if ( ! smcore_has_post_type( 'sm_partner' ) ) {
 }
 
 $title = school_master_option( 'partners_title', __( 'Our Partners', 'school-master' ) );
+$mode  = school_master_option( 'partners_autoscroll', true ) ? 'auto' : 'manual';
 
 $partners = new WP_Query(
 	array(
@@ -34,7 +36,7 @@ if ( ! $partners->have_posts() ) {
 	<div class="container">
 		<h2 class="section-title section-title--center"><?php echo esc_html( $title ); ?></h2>
 
-		<div class="partners__viewport" data-marquee-viewport>
+		<div class="partners__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>">
 			<div class="partners__track" data-marquee-track>
 				<?php
 				while ( $partners->have_posts() ) :
