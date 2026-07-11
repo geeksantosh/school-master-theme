@@ -9,6 +9,12 @@ defined( 'ABSPATH' ) || exit;
 
 $title = school_master_option( 'news_title', __( 'Latest News', 'school-master' ) );
 
+// "All news" can only point somewhere real when a Posts page is set in
+// Settings → Reading; with no page, get_permalink(0) would resolve to the
+// current global post instead, so hide the link entirely.
+$posts_page_id = (int) get_option( 'page_for_posts' );
+$all_news_url  = $posts_page_id ? get_permalink( $posts_page_id ) : '';
+
 $news = new WP_Query(
 	array(
 		'post_type'      => 'post',
@@ -25,7 +31,9 @@ if ( ! $news->have_posts() ) {
 	<div class="container">
 		<div class="section-head">
 			<h2 class="section-title"><?php echo esc_html( $title ); ?></h2>
-			<a class="section-more" href="<?php echo esc_url( get_permalink( get_option( 'page_for_posts' ) ) ); ?>"><?php esc_html_e( 'All news', 'school-master' ); ?></a>
+			<?php if ( $all_news_url ) : ?>
+				<a class="section-more" href="<?php echo esc_url( $all_news_url ); ?>"><?php esc_html_e( 'All news', 'school-master' ); ?></a>
+			<?php endif; ?>
 		</div>
 
 		<div class="card-grid card-grid--news">
