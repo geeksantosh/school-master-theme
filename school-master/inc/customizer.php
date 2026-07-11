@@ -462,6 +462,38 @@ function school_master_customize_register( $wp_customize ) {
 			'type'        => 'text',
 		)
 	);
+	$wp_customize->add_setting(
+		'school_master_footer_credit_text',
+		array(
+			'default'           => 'Developed by Santosh Adhikari',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'school_master_footer_credit_text',
+		array(
+			'label'       => __( 'Credit Text', 'school-master' ),
+			'description' => __( 'Shown after the copyright, e.g. "Developed by …". Leave blank to hide.', 'school-master' ),
+			'section'     => 'school_master_footer',
+			'type'        => 'text',
+		)
+	);
+	$wp_customize->add_setting(
+		'school_master_footer_credit_url',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'esc_url_raw',
+		)
+	);
+	$wp_customize->add_control(
+		'school_master_footer_credit_url',
+		array(
+			'label'       => __( 'Credit URL', 'school-master' ),
+			'description' => __( 'Optional link for the credit text (opens in a new tab).', 'school-master' ),
+			'section'     => 'school_master_footer',
+			'type'        => 'url',
+		)
+	);
 }
 add_action( 'customize_register', 'school_master_customize_register' );
 
