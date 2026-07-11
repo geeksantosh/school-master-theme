@@ -268,8 +268,9 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .faculty-card__contact { list-style: none; padding: 0; margin: .5rem 0 0; font-size: .88rem; display: flex; flex-direction: column; gap: .15rem; }
 .faculty-card__bio { text-align: left; margin-top: 1rem; }
 
-.event-card { position: relative; }
-.event-card__date { position: absolute; top: 12px; left: 12px; z-index: 2; background: var(--sm-secondary); color: var(--sm-dark); border-radius: 8px; padding: .35rem .6rem; text-align: center; line-height: 1; box-shadow: var(--sm-shadow); }
+.event-card { flex-direction: row; align-items: flex-start; }
+.event-card__date { flex: 0 0 auto; margin: 1.25rem 0 0 1.25rem; min-width: 52px; background: var(--sm-secondary); color: var(--sm-dark); border-radius: 8px; padding: .4rem .65rem; text-align: center; line-height: 1; box-shadow: var(--sm-shadow); }
+.event-card .card__body { flex: 1 1 auto; min-width: 0; }
 .event-card__day { display: block; font-size: 1.3rem; font-weight: 800; }
 .event-card__month { display: block; font-size: .7rem; text-transform: uppercase; font-weight: 700; }
 .event-meta { list-style: none; padding: 0; margin: 0 0 .5rem; font-size: .9rem; color: var(--sm-muted); }
