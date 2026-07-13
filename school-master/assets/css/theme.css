@@ -34,6 +34,11 @@ body {
 	background: var(--sm-white);
 }
 
+/* Sticky footer: short pages must not leave a gap below the footer. */
+.site { display: flex; flex-direction: column; min-height: 100vh; min-height: calc(100svh - var(--wp-admin--admin-bar--height, 0px)); }
+.site-content { flex: 1 0 auto; }
+.site-footer { margin-top: auto; }
+
 a { color: var(--sm-primary); text-decoration: none; }
 a:hover, a:focus { text-decoration: underline; }
 
