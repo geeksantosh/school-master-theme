@@ -23,18 +23,21 @@ class School_Master_Nav_Walker extends Walker_Nav_Menu {
 	 * @return void
 	 */
 	public function start_el( &$output, $item, $depth = 0, $args = null, $id = 0 ) {
-		parent::start_el( $output, $item, $depth, $args, $id );
+		// Build this item in isolation so the toggle lands on its own <a>,
+		// not on the first anchor of the accumulated menu output.
+		$item_html = '';
+		parent::start_el( $item_html, $item, $depth, $args, $id );
 
-		$has_children = in_array( 'menu-item-has-children', (array) $item->classes, true );
-
-		if ( $has_children && 0 === $depth ) {
-			// Insert an accessible dropdown toggle right after the opening <a>.
+		if ( in_array( 'menu-item-has-children', (array) $item->classes, true ) ) {
+			// Insert an accessible dropdown toggle right after the item link.
 			$toggle = sprintf(
 				'<button class="dropdown-toggle" aria-expanded="false"><span class="screen-reader-text">%s</span><span class="caret" aria-hidden="true"></span></button>',
 				esc_html__( 'Open submenu', 'school-master' )
 			);
 
-			$output = preg_replace( '/(<a[^>]*>.*?<\/a>)/', '$1' . $toggle, $output, 1 );
+			$item_html = preg_replace( '/(<a[^>]*>.*?<\/a>)/', '$1' . $toggle, $item_html, 1 );
 		}
+
+		$output .= $item_html;
 	}
 }
