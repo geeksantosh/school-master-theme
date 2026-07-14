@@ -47,6 +47,10 @@ if ( ! $courses->have_posts() ) {
 						<a class="card__media" href="<?php the_permalink(); ?>">
 							<?php the_post_thumbnail( 'school-master-card', array( 'loading' => 'lazy' ) ); ?>
 						</a>
+					<?php else : ?>
+						<a class="card__media card__media--placeholder" href="<?php the_permalink(); ?>">
+							<div class="card__media-placeholder">📚</div>
+						</a>
 					<?php endif; ?>
 					<div class="card__body">
 						<h3 class="card__title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
