@@ -176,3 +176,30 @@ add_filter( 'post_thumbnail_html', function( $html, $post_id, $post_thumbnail_id
 	// For non-SVG images, return WordPress's default HTML
 	return $html;
 }, 10, 5 );
+
+// Add custom column to notice list showing popup status
+add_filter( 'manage_sm_notice_posts_columns', function( $columns ) {
+	$new_columns = array();
+	foreach ( $columns as $key => $label ) {
+		$new_columns[ $key ] = $label;
+		if ( 'title' === $key ) {
+			$new_columns['popup_status'] = __( 'Popup Status', 'school-master' );
+		}
+	}
+	return $new_columns;
+} );
+
+add_action( 'manage_sm_notice_posts_custom_column', function( $column, $post_id ) {
+	if ( 'popup_status' === $column ) {
+		$expiry = (string) get_post_meta( $post_id, '_sm_popup_expiry', true );
+		$today = current_time( 'Y-m-d' );
+
+		if ( '' === $expiry ) {
+			echo '<span style="background: #e7f3ff; padding: 4px 8px; border-radius: 3px; font-size: 12px;">Always</span>';
+		} elseif ( $expiry >= $today ) {
+			echo '<span style="background: #fff8e5; padding: 4px 8px; border-radius: 3px; font-size: 12px;">Until ' . esc_html( $expiry ) . '</span>';
+		} else {
+			echo '<span style="background: #ffe5e5; padding: 4px 8px; border-radius: 3px; font-size: 12px;">Expired</span>';
+		}
+	}
+}, 10, 2 );
