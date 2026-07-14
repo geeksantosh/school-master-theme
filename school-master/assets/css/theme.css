@@ -185,6 +185,8 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .card__media img { width: 100%; display: block; object-fit: cover; height: 100%; }
 .card__media--placeholder { display: flex; align-items: center; justify-content: center; height: 180px; background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%); }
 .card__media-placeholder { font-size: 3rem; }
+.course-single__media--placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%); aspect-ratio: 600 / 400; }
+.course-single__media-placeholder { font-size: 4rem; }
 .card__body { padding: 1.25rem; display: flex; flex-direction: column; gap: .5rem; }
 .card__title { font-size: 1.15rem; margin: 0; }
 .card__title a { color: var(--sm-dark); }

@@ -26,6 +26,10 @@ while ( have_posts() ) :
 
 				<?php if ( has_post_thumbnail() ) : ?>
 					<div class="course-single__media" style="max-width: 600px; margin-bottom: 2rem;"><?php the_post_thumbnail( 'large' ); ?></div>
+				<?php else : ?>
+					<div class="course-single__media course-single__media--placeholder" style="max-width: 600px; margin-bottom: 2rem;">
+						<div class="course-single__media-placeholder">📚</div>
+					</div>
 				<?php endif; ?>
 
 				<?php if ( $duration || $seats || $fee || $eligibility ) : ?>
