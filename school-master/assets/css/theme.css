@@ -564,3 +564,92 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 @media (max-width: 768px) {
 	.notice-bar__label { font-size: .72rem; }
 }
+
+/* -------------------------------------------------------------------------
+ * Pagination
+ * ---------------------------------------------------------------------- */
+.pagination {
+	list-style: none;
+	margin: 3rem 0 0;
+	padding: 0;
+	display: flex;
+	gap: .5rem;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.page-numbers {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 40px;
+	height: 40px;
+	padding: 0 .6rem;
+	border-radius: 6px;
+	border: 1px solid var(--sm-border);
+	background: #fff;
+	color: var(--sm-text);
+	font-weight: 600;
+	font-size: .95rem;
+	transition: all .2s ease;
+	text-decoration: none;
+}
+
+.page-numbers:hover {
+	background: var(--sm-bg-soft);
+	border-color: var(--sm-primary);
+	color: var(--sm-primary);
+	text-decoration: none;
+}
+
+.page-numbers.current {
+	background: var(--sm-primary);
+	border-color: var(--sm-primary);
+	color: #fff;
+	cursor: default;
+}
+
+.page-numbers.current:hover {
+	background: var(--sm-primary);
+	color: #fff;
+}
+
+.page-numbers.prev,
+.page-numbers.next {
+	min-width: auto;
+	padding: 0 1rem;
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+}
+
+/* Add arrow icons to prev/next without content changes */
+.page-numbers.prev::before {
+	content: "←";
+	display: inline-block;
+}
+
+.page-numbers.next::after {
+	content: "→";
+	display: inline-block;
+}
+
+@media (max-width: 480px) {
+	.pagination {
+		gap: .3rem;
+	}
+
+	.page-numbers {
+		min-width: 36px;
+		height: 36px;
+		padding: 0 .4rem;
+		font-size: .88rem;
+	}
+
+	.page-numbers.prev,
+	.page-numbers.next {
+		padding: 0 .7rem;
+		font-size: .88rem;
+	}
+}
