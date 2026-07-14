@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	let currentIndex = 0;
 
 	// Pagination logic
-	function showPage(page) {
+	function showPage(page, scrollIntoView = false) {
 		if (page < 1 || page > totalPages) return;
 		currentPage = page;
 
@@ -216,30 +216,32 @@ document.addEventListener('DOMContentLoaded', function() {
 		paginationNextBtn?.classList.toggle('is-disabled', currentPage === totalPages);
 		paginationLastBtn?.classList.toggle('is-disabled', currentPage === totalPages);
 
-		// Scroll to top of gallery
-		galleryGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		// Only scroll if explicitly requested (from pagination clicks, not initial load)
+		if (scrollIntoView) {
+			galleryGrid?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		}
 	}
 
 	// Pagination button handlers
 	paginationFirstBtn?.addEventListener('click', () => {
-		if (currentPage > 1) showPage(1);
+		if (currentPage > 1) showPage(1, true);
 	});
 
 	paginationPrevBtn?.addEventListener('click', () => {
-		if (currentPage > 1) showPage(currentPage - 1);
+		if (currentPage > 1) showPage(currentPage - 1, true);
 	});
 
 	paginationNextBtn?.addEventListener('click', () => {
-		if (currentPage < totalPages) showPage(currentPage + 1);
+		if (currentPage < totalPages) showPage(currentPage + 1, true);
 	});
 
 	paginationLastBtn?.addEventListener('click', () => {
-		if (currentPage < totalPages) showPage(totalPages);
+		if (currentPage < totalPages) showPage(totalPages, true);
 	});
 
-	// Initialize pagination
+	// Initialize pagination without scrolling
 	if (totalPages > 1) {
-		showPage(1);
+		showPage(1, false);
 	}
 
 	// Open lightbox from grid (using event delegation)
