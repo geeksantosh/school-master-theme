@@ -137,36 +137,42 @@ add_action( 'after_setup_theme', function() {
 
 // Filter post_thumbnail_html to handle SVG images properly
 add_filter( 'post_thumbnail_html', function( $html, $post_id, $post_thumbnail_id, $size, $attr ) {
-	// If this is already valid HTML, return it
-	if ( ! empty( $html ) ) {
-		return $html;
-	}
-
-	// If the attachment is an SVG, generate HTML for it directly
+	// Check if the attachment is an SVG
 	$attachment = get_post( $post_thumbnail_id );
 	if ( $attachment && 'image/svg+xml' === $attachment->post_mime_type ) {
 		$src = wp_get_attachment_url( $post_thumbnail_id );
 		$alt = get_post_meta( $post_thumbnail_id, '_wp_attachment_image_alt', true );
 		$title = $attachment->post_title;
+		$metadata = wp_get_attachment_metadata( $post_thumbnail_id );
 
-		if ( is_array( $attr ) ) {
-			$attr = array_merge(
-				array( 'alt' => $alt ? $alt : $title ),
-				$attr
-			);
-			$attr_html = implode( ' ', array_map(
-				function( $k, $v ) {
-					return $k . '="' . esc_attr( $v ) . '"';
-				},
-				array_keys( $attr ),
-				$attr
-			) );
-		} else {
-			$attr_html = 'alt="' . esc_attr( $alt ? $alt : $title ) . '"';
+		// Build attributes array
+		$image_attr = array(
+			'src' => $src,
+			'alt' => $alt ? $alt : $title,
+		);
+
+		// Add dimensions if available in metadata
+		if ( $metadata && isset( $metadata['width'], $metadata['height'] ) ) {
+			$image_attr['width'] = $metadata['width'];
+			$image_attr['height'] = $metadata['height'];
 		}
 
-		return '<img src="' . esc_url( $src ) . '" ' . $attr_html . ' loading="lazy" />';
+		// Merge with provided attributes
+		if ( is_array( $attr ) ) {
+			$image_attr = array_merge( $image_attr, $attr );
+		}
+
+		// Build HTML
+		$attr_html = '';
+		foreach ( $image_attr as $key => $value ) {
+			if ( $value ) {
+				$attr_html .= ' ' . $key . '="' . esc_attr( $value ) . '"';
+			}
+		}
+
+		return '<img' . $attr_html . ' />';
 	}
 
+	// For non-SVG images, return WordPress's default HTML
 	return $html;
 }, 10, 5 );
