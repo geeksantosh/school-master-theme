@@ -49,7 +49,7 @@ $has_footer_widgets = is_active_sidebar( 'footer-1' ) || is_active_sidebar( 'foo
 						sprintf(
 							/* translators: %s: developer name. */
 							esc_html__( 'Developed by %s', 'school-master' ),
-							'Santosh Adhikari'
+							'<a href="https://www.facebook.com/g33ksantosh" target="_blank" rel="noopener noreferrer">Santosh Adhikari</a>'
 						)
 					);
 					?>
