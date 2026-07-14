@@ -36,7 +36,11 @@ if ( ! $partners->have_posts() ) {
 	<div class="container">
 		<h2 class="section-title section-title--center"><?php echo esc_html( $title ); ?></h2>
 
-		<div class="partners__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>">
+		<div class="carousel-controls">
+			<button class="carousel-arrow carousel-arrow--left" data-carousel="partners" aria-label="<?php esc_attr_e( 'Scroll left', 'school-master' ); ?>">‹</button>
+			<button class="carousel-arrow carousel-arrow--right" data-carousel="partners" aria-label="<?php esc_attr_e( 'Scroll right', 'school-master' ); ?>">›</button>
+		</div>
+		<div class="partners__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>" data-carousel-viewport="partners">
 			<div class="partners__track" data-marquee-track>
 				<?php
 				while ( $partners->have_posts() ) :

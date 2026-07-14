@@ -16,8 +16,8 @@ if ( ! smcore_has_post_type( 'sm_testimonial' ) ) {
 }
 
 $title = school_master_option( 'testimonials_title', __( 'What People Say', 'school-master' ) );
-$count = (int) school_master_option( 'testimonials_count', 3 );
-$mode  = school_master_option( 'testimonials_autoscroll', false ) ? 'auto' : 'manual';
+$count = (int) school_master_option( 'testimonials_count', 100 );
+$mode  = school_master_option( 'testimonials_autoscroll', true ) ? 'auto' : 'manual';
 
 $testimonials = new WP_Query(
 	array(
@@ -45,7 +45,11 @@ if ( ! $testimonials->have_posts() ) {
 		 * visitors swipe or scroll the row themselves.
 		 */
 		?>
-		<div class="testimonials__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>">
+		<div class="carousel-controls">
+			<button class="carousel-arrow carousel-arrow--left" data-carousel="testimonials" aria-label="<?php esc_attr_e( 'Scroll left', 'school-master' ); ?>">‹</button>
+			<button class="carousel-arrow carousel-arrow--right" data-carousel="testimonials" aria-label="<?php esc_attr_e( 'Scroll right', 'school-master' ); ?>">›</button>
+		</div>
+		<div class="testimonials__viewport" data-marquee-viewport="<?php echo esc_attr( $mode ); ?>" data-carousel-viewport="testimonials">
 			<div class="testimonials__track" data-marquee-track>
 				<?php
 				while ( $testimonials->have_posts() ) :

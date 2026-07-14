@@ -1,6 +1,6 @@
 <?php
 /**
- * Gallery archive — a grid of featured images linking to each gallery item.
+ * Single gallery post — displays images for this gallery only.
  *
  * @package SchoolMaster
  */
@@ -11,72 +11,70 @@ get_header();
 ?>
 <main id="main" class="site-main container">
 	<div class="content-area content-area--full">
-		<header class="page-header">
-			<h1 class="page-title"><?php post_type_archive_title(); ?></h1>
-		</header>
+		<?php
+		while ( have_posts() ) :
+			the_post();
+			?>
+			<header class="page-header">
+				<h1 class="page-title"><?php the_title(); ?></h1>
+				<?php if ( get_the_excerpt() ) : ?>
+					<p class="page-description"><?php the_excerpt(); ?></p>
+				<?php endif; ?>
+			</header>
 
-		<?php if ( have_posts() ) : ?>
 			<?php
-			$items = array();
-			while ( have_posts() ) :
-				the_post();
+			// Get gallery images from meta field
+			$gallery_ids = get_post_meta( get_the_ID(), '_school_master_gallery_images', true );
 
-				// Get gallery images from meta field
-				$gallery_ids = get_post_meta( get_the_ID(), '_school_master_gallery_images', true );
+			if ( $gallery_ids ) {
+				$ids = array_filter( explode( ',', $gallery_ids ) );
+				$items = array();
 
-				if ( $gallery_ids ) {
-					// Use stored gallery images
-					$ids = array_filter( explode( ',', $gallery_ids ) );
-					foreach ( $ids as $attachment_id ) {
-						$image_url = wp_get_attachment_image_url( $attachment_id, 'full' );
-						$thumb_url = wp_get_attachment_image_url( $attachment_id, 'school-master-card' );
+				foreach ( $ids as $attachment_id ) {
+					$image_url = wp_get_attachment_image_url( $attachment_id, 'full' );
+					$thumb_url = wp_get_attachment_image_url( $attachment_id, 'school-master-card' );
 
-						if ( $image_url ) {
-							$items[] = array(
-								'id'    => $attachment_id,
-								'title' => get_the_title( $attachment_id ),
-								'image' => $image_url,
-								'thumb' => $thumb_url ?: $image_url,
-							);
-						}
+					if ( $image_url ) {
+						$items[] = array(
+							'id'    => $attachment_id,
+							'title' => get_the_title( $attachment_id ),
+							'image' => $image_url,
+							'thumb' => $thumb_url ?: $image_url,
+						);
 					}
-				} elseif ( has_post_thumbnail() ) {
-					// Fallback to featured image if no gallery images
-					$items[] = array(
-						'id'    => get_the_ID(),
-						'title' => get_the_title(),
-						'image' => get_the_post_thumbnail_url( get_the_ID(), 'full' ),
-						'thumb' => get_the_post_thumbnail_url( get_the_ID(), 'school-master-card' ),
-					);
 				}
-			endwhile;
-			wp_reset_postdata();
 
-			if ( ! empty( $items ) ) :
-				?>
-				<div class="gallery-grid" id="gallery-grid">
-					<?php foreach ( $items as $index => $item ) : ?>
-						<div class="gallery-grid__item" data-index="<?php echo esc_attr( $index ); ?>">
-							<img
-								class="gallery-grid__img"
-								src="<?php echo esc_url( $item['thumb'] ); ?>"
-								alt="<?php echo esc_attr( $item['title'] ); ?>"
-								data-full-src="<?php echo esc_url( $item['image'] ); ?>"
-								data-full-alt="<?php echo esc_attr( $item['title'] ); ?>"
-								loading="lazy"
-							>
-							<div class="gallery-grid__overlay">
-								<button class="gallery-grid__btn" aria-label="<?php esc_attr_e( 'View full image', 'school-master' ); ?>">
-									<span class="gallery-grid__icon">🔍</span>
-								</button>
+				if ( ! empty( $items ) ) :
+					?>
+					<!-- Masonry Grid -->
+					<div class="gallery-grid" id="gallery-grid">
+						<?php foreach ( $items as $index => $item ) : ?>
+							<div class="gallery-grid__item" data-index="<?php echo esc_attr( $index ); ?>">
+								<img
+									class="gallery-grid__img"
+									src="<?php echo esc_url( $item['thumb'] ); ?>"
+									alt="<?php echo esc_attr( $item['title'] ); ?>"
+									data-full-src="<?php echo esc_url( $item['image'] ); ?>"
+									data-full-alt="<?php echo esc_attr( $item['title'] ); ?>"
+									loading="lazy"
+								>
+								<div class="gallery-grid__overlay">
+									<button class="gallery-grid__btn" aria-label="<?php esc_attr_e( 'View full image', 'school-master' ); ?>">
+										<span class="gallery-grid__icon">🔍</span>
+									</button>
+								</div>
 							</div>
-						</div>
-					<?php endforeach; ?>
-				</div>
-			<?php endif; ?>
-		<?php else : ?>
-			<?php get_template_part( 'template-parts/content', 'none' ); ?>
-		<?php endif; ?>
+						<?php endforeach; ?>
+					</div>
+					<?php
+				endif;
+			} else {
+				?>
+				<p class="no-gallery-images"><?php esc_html_e( 'No images in this gallery yet.', 'school-master' ); ?></p>
+				<?php
+			}
+			?>
+		<?php endwhile; ?>
 	</div>
 </main>
 
@@ -130,10 +128,10 @@ get_header();
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+	const galleryGrid = document.getElementById('gallery-grid');
 	const lightbox = document.getElementById('gallery-lightbox');
 	const lightboxOverlay = document.querySelector('.gallery-lightbox__overlay');
 	const closeBtn = document.getElementById('gallery-close');
-	const gridItems = document.querySelectorAll('.gallery-grid__item');
 
 	const mainImage = document.getElementById('gallery-main-image');
 	const prevBtn = document.getElementById('gallery-prev');
@@ -145,14 +143,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	let currentIndex = 0;
 
-	// Open lightbox from grid
-	gridItems.forEach((item, index) => {
-		item.addEventListener('click', () => {
-			currentIndex = index;
-			updateMainImage(index);
-			lightbox.style.display = 'flex';
-			document.body.style.overflow = 'hidden';
+	// Open lightbox from grid (using event delegation)
+	galleryGrid?.addEventListener('click', (e) => {
+		const item = e.target.closest('.gallery-grid__item');
+		if (!item) return;
+
+		// Get the index of the clicked item
+		const allItems = document.querySelectorAll('.gallery-grid__item');
+		let clickedIndex = 0;
+		allItems.forEach((el, idx) => {
+			if (el === item) clickedIndex = idx;
 		});
+
+		currentIndex = clickedIndex;
+		updateMainImage(clickedIndex);
+		lightbox.style.display = 'flex';
+		document.body.style.overflow = 'hidden';
 	});
 
 	// Autoplay functionality
@@ -284,5 +290,6 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 });
 </script>
+
 <?php
 get_footer();

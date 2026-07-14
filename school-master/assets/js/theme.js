@@ -14,6 +14,7 @@
 		setupCounters();
 		setupNoticePopup();
 		setupMarquees();
+		setupCarouselArrows();
 	} );
 
 	/**
@@ -296,8 +297,8 @@
 					if ( ! cloned ) {
 						addClones();
 					}
-					// Keep a roughly constant speed (~70px/sec) regardless of count.
-					var duration = Math.max( 20, Math.round( setWidth / 70 ) );
+					// Keep a roughly constant speed (~40px/sec) regardless of count.
+					var duration = Math.max( 30, Math.round( setWidth / 40 ) );
 					track.style.setProperty( '--sm-marquee-duration', duration + 's' );
 					viewport.classList.add( 'is-scrolling' );
 				} else {
@@ -322,4 +323,24 @@
 			} );
 		} );
 	}
+
+	function setupCarouselArrows() {
+		var arrows = document.querySelectorAll( '.carousel-arrow' );
+		arrows.forEach( function( arrow ) {
+			arrow.addEventListener( 'click', function( e ) {
+				e.preventDefault();
+				var carouselName = arrow.getAttribute( 'data-carousel' );
+				var isLeft = arrow.classList.contains( 'carousel-arrow--left' );
+				var viewport = document.querySelector( '[data-carousel-viewport="' + carouselName + '"]' );
+				if ( viewport ) {
+					var distance = isLeft ? -300 : 300;
+					viewport.scrollBy( { left: distance, behavior: 'smooth' } );
+				}
+			} );
+		} );
+	}
+
+	document.addEventListener( 'DOMContentLoaded', function() {
+		setupCarouselArrows();
+	} );
 }() );

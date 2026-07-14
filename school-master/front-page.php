@@ -27,6 +27,7 @@ $sections = array(
 	'news'         => 'news',
 	'testimonials' => 'testimonials',
 	'partners'     => 'partners',
+	'gallery'      => 'gallery',
 	'cta'          => 'cta',
 );
 
