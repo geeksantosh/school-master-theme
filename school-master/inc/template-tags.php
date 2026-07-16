@@ -580,47 +580,85 @@ function school_master_render_popup_card( $title, $text, $btn_url, $btn_text, $a
 }
 
 /**
+ * Describe an attachment for display: its file type and human-readable size.
+ *
+ * The extension comes from the URL, so it works for any media-library upload.
+ * The size needs the file on disk, which means resolving the URL back to an
+ * attachment ID — that fails for files hosted elsewhere or since deleted, so
+ * `size` is empty in those cases and callers must treat it as optional.
+ *
+ * @param string $url Attachment URL.
+ * @return array Empty when there is no attachment, otherwise keys:
+ *               url, ext, label, size, is_image.
+ */
+function school_master_attachment_info( $url ) {
+	$url = trim( (string) $url );
+
+	if ( '' === $url ) {
+		return array();
+	}
+
+	$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+	$ext  = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
+	$size = '';
+
+	$attachment_id = attachment_url_to_postid( $url );
+
+	if ( $attachment_id ) {
+		$file = get_attached_file( $attachment_id );
+
+		if ( $file && file_exists( $file ) ) {
+			$size = size_format( filesize( $file ), 2 );
+		}
+	}
+
+	return array(
+		'url'      => $url,
+		'ext'      => $ext,
+		'label'    => '' !== $ext ? strtoupper( $ext ) : __( 'FILE', 'school-master' ),
+		'size'     => $size,
+		'is_image' => in_array( $ext, array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg' ), true ),
+	);
+}
+
+/**
  * Render a notice's attachment inside the popup.
  *
  * Images (jpg/png/gif/webp/svg) show an inline preview that opens full size in
- * a new tab; any other file (PDF, Doc, …) shows a labelled button. The file
- * extension is read from the URL, so it works with any media-library upload.
+ * a new tab; any other file (PDF, Doc, …) shows a labelled button.
  *
  * @param string $url   Attachment URL.
  * @param string $title Notice title, used for the image alt text.
  * @return void
  */
 function school_master_popup_attachment( $url, $title = '' ) {
-	$url = trim( (string) $url );
+	$info = school_master_attachment_info( $url );
 
-	if ( '' === $url ) {
+	if ( empty( $info ) ) {
 		return;
 	}
 
-	$path = (string) wp_parse_url( $url, PHP_URL_PATH );
-	$ext  = strtolower( pathinfo( $path, PATHINFO_EXTENSION ) );
-
 	echo '<div class="sm-popup__attachment">';
 
-	if ( in_array( $ext, array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg' ), true ) ) {
+	if ( $info['is_image'] ) {
 		$alt = '' !== $title
 			? sprintf( /* translators: %s: notice title. */ __( 'Attachment for %s', 'school-master' ), $title )
 			: __( 'Notice attachment', 'school-master' );
 
 		printf(
 			'<a class="sm-popup__attachment-image" href="%1$s" target="_blank" rel="noopener"><img src="%1$s" alt="%2$s" loading="lazy" /></a>',
-			esc_url( $url ),
+			esc_url( $info['url'] ),
 			esc_attr( $alt )
 		);
 	} else {
-		$label = '' !== $ext
+		$label = '' !== $info['ext']
 			/* translators: %s: file type, e.g. PDF. */
-			? sprintf( __( 'View attachment (%s)', 'school-master' ), strtoupper( $ext ) )
+			? sprintf( __( 'View attachment (%s)', 'school-master' ), $info['label'] )
 			: __( 'View attachment', 'school-master' );
 
 		printf(
 			'<a class="btn btn--secondary sm-popup__attachment-link" href="%1$s" target="_blank" rel="noopener">%2$s</a>',
-			esc_url( $url ),
+			esc_url( $info['url'] ),
 			esc_html( $label )
 		);
 	}

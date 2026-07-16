@@ -84,6 +84,8 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .btn:hover, .btn:focus { text-decoration: none; transform: translateY(-1px); }
 .btn--primary { background: var(--sm-primary); color: #fff; }
 .btn--secondary { background: var(--sm-secondary); color: var(--sm-dark); }
+.btn--outline { background: transparent; border-color: var(--sm-border); color: var(--sm-primary); }
+.btn--outline:hover, .btn--outline:focus { border-color: var(--sm-primary); }
 
 /* -------------------------------------------------------------------------
  * Top bar + header
@@ -173,6 +175,63 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 .notice-link:hover { color: var(--sm-primary); }
 .notice-item--important .notice-link { color: var(--sm-primary); }
 .notice-badge { background: var(--sm-secondary); color: var(--sm-dark); font-size: .68rem; font-weight: 700; padding: .1rem .45rem; border-radius: 999px; text-transform: uppercase; }
+
+/* Notice archive table. The wrapper scrolls on its own so a long title or a
+ * wide file type can never push the page into horizontal scroll. */
+.notice-table__wrap { overflow-x: auto; border: 1px solid var(--sm-border); border-radius: var(--sm-radius); background: var(--sm-white); }
+.notice-table { width: 100%; border-collapse: collapse; }
+.notice-table__col { background: var(--sm-bg-soft); color: var(--sm-primary); font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; text-align: left; padding: .9rem 1rem; border-bottom: 1px solid var(--sm-border); white-space: nowrap; }
+.notice-table__col--actions { text-align: right; }
+
+.notice-row > td { padding: 1rem; border-bottom: 1px solid var(--sm-border); vertical-align: middle; }
+.notice-row:last-child > td { border-bottom: 0; }
+.notice-row:nth-child(even) { background: rgba(11, 37, 69, .015); }
+.notice-row:hover { background: var(--sm-bg-soft); }
+
+.notice-row__topic { display: flex; align-items: flex-start; gap: .85rem; min-width: 260px; }
+.notice-row__title { font-weight: 600; }
+.notice-row__size { color: var(--sm-muted); font-size: .82rem; font-weight: 400; white-space: nowrap; }
+
+/* File type chip. Colored per extension so the list scans by file type. */
+.notice-row__type { flex: none; min-width: 44px; text-align: center; background: var(--sm-muted); color: #fff; font-size: .68rem; font-weight: 700; letter-spacing: .03em; padding: .25rem .5rem; border-radius: 6px; text-transform: uppercase; }
+.notice-row__type--pdf { background: #c1352c; }
+.notice-row__type--jpg, .notice-row__type--jpeg, .notice-row__type--png,
+.notice-row__type--gif, .notice-row__type--webp, .notice-row__type--svg { background: #7b2fbe; }
+.notice-row__type--doc, .notice-row__type--docx { background: var(--sm-primary); }
+.notice-row__type--xls, .notice-row__type--xlsx, .notice-row__type--csv { background: #1c7a4a; }
+.notice-row__type--none { background: transparent; color: var(--sm-border); }
+
+.notice-row__published { color: var(--sm-muted); font-size: .88rem; white-space: nowrap; }
+.notice-row__icon { vertical-align: -2px; margin-right: .35rem; color: var(--sm-secondary); }
+.notice-row__actions { text-align: right; }
+.notice-row__btn { padding: .5rem 1rem; font-size: .88rem; white-space: nowrap; }
+
+.notice-row--important .notice-link { color: var(--sm-primary); }
+
+/* Below the table breakpoint each row becomes its own card and the column
+ * headings are re-rendered per cell from data-label, since the stacked cells
+ * no longer line up under a shared header row. */
+@media (max-width: 768px) {
+	.notice-table__wrap { border: 0; border-radius: 0; background: transparent; overflow-x: visible; }
+	.notice-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+	.notice-table, .notice-table tbody, .notice-row { display: block; width: 100%; }
+	.notice-row { border: 1px solid var(--sm-border); border-radius: var(--sm-radius); background: var(--sm-white); margin-bottom: .75rem; padding: .5rem 0; }
+	.notice-row:nth-child(even), .notice-row:hover { background: var(--sm-white); }
+	.notice-row > td { display: block; padding: .4rem 1rem; border-bottom: 0; }
+	.notice-row > .notice-row__topic { display: flex; min-width: 0; }
+	.notice-row__published::before, .notice-row__actions::before {
+		content: attr(data-label);
+		display: block;
+		margin-bottom: .2rem;
+		color: var(--sm-muted);
+		font-size: .66rem;
+		font-weight: 700;
+		letter-spacing: .04em;
+		text-transform: uppercase;
+	}
+	.notice-row__actions { text-align: left; }
+	.notice-row__btn { display: block; text-align: center; }
+}
 
 /* -------------------------------------------------------------------------
  * Cards / grids
