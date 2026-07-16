@@ -23,6 +23,7 @@ $sections = array(
 	'welcome'      => 'welcome',
 	'courses'      => 'courses',
 	'whyus'        => 'whyus',
+	'video'        => 'video',
 	'stats'        => 'stats',
 	'news'         => 'news',
 	'testimonials' => 'testimonials',

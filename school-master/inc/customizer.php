@@ -371,6 +371,34 @@ function school_master_customize_register( $wp_customize ) {
 	$add_toggle( 'section_whyus_enable', __( 'Enable Why Choose Us', 'school-master' ), 'school_master_whyus', true );
 	$add_text( 'whyus_title', __( 'Section Title', 'school-master' ), 'school_master_whyus', __( 'Why Choose Us', 'school-master' ) );
 
+	// 4e.5 Campus Video.
+	$wp_customize->add_section(
+		'school_master_video',
+		array(
+			'title' => __( 'Campus Video', 'school-master' ),
+			'panel' => 'school_master_homepage',
+		)
+	);
+	$add_toggle( 'section_video_enable', __( 'Enable Campus Video', 'school-master' ), 'school_master_video', true );
+	$add_text( 'video_title', __( 'Section Title', 'school-master' ), 'school_master_video', __( 'Campus Life', 'school-master' ) );
+	$add_text( 'video_url', __( 'YouTube Video URL', 'school-master' ), 'school_master_video', '', 'url' );
+	$wp_customize->add_setting(
+		'school_master_video_text',
+		array(
+			'default'           => '',
+			'sanitize_callback' => 'sanitize_text_field',
+		)
+	);
+	$wp_customize->add_control(
+		'school_master_video_text',
+		array(
+			'label'       => __( 'Intro Text', 'school-master' ),
+			'description' => __( 'Optional line shown above the video.', 'school-master' ),
+			'section'     => 'school_master_video',
+			'type'        => 'textarea',
+		)
+	);
+
 	// 4f. Stats / Counters.
 	$wp_customize->add_section(
 		'school_master_stats',

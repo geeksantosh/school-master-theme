@@ -608,7 +608,10 @@ function school_master_attachment_info( $url ) {
 		$file = get_attached_file( $attachment_id );
 
 		if ( $file && file_exists( $file ) ) {
-			$size = size_format( filesize( $file ), 2 );
+			$bytes = filesize( $file );
+			// A raw byte count is already exact, so decimals there are just
+			// noise ("1,005.00 B"); KB and up genuinely need them.
+			$size = size_format( $bytes, $bytes < KB_IN_BYTES ? 0 : 2 );
 		}
 	}
 
@@ -619,6 +622,62 @@ function school_master_attachment_info( $url ) {
 		'size'     => $size,
 		'is_image' => in_array( $ext, array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg' ), true ),
 	);
+}
+
+/**
+ * Render the apply / brochure buttons for the current course.
+ *
+ * Both fields are optional, so a course with neither set renders nothing and
+ * its card looks exactly as it did before these fields existed.
+ *
+ * @param string $btn_class Extra classes for each button, e.g. 'btn--sm'.
+ * @return void
+ */
+function school_master_course_actions( $btn_class = '' ) {
+	if ( ! function_exists( 'smcore_get_meta' ) ) {
+		return;
+	}
+
+	$apply    = smcore_get_meta( 'apply_url' );
+	$brochure = school_master_attachment_info( smcore_get_meta( 'brochure' ) );
+
+	if ( ! $apply && empty( $brochure ) ) {
+		return;
+	}
+
+	$classes = trim( 'btn course-actions__btn ' . $btn_class );
+
+	echo '<div class="course-actions">';
+
+	if ( $apply ) {
+		printf(
+			'<a class="%1$s btn--primary" href="%2$s">%3$s<span class="screen-reader-text"> %4$s</span></a>',
+			esc_attr( $classes ),
+			esc_url( $apply ),
+			esc_html__( 'Apply Now', 'school-master' ),
+			esc_html( get_the_title() )
+		);
+	}
+
+	if ( ! empty( $brochure ) ) {
+		$label = $brochure['size']
+			? sprintf(
+				/* translators: %s: file size, e.g. 2.4 MB. */
+				__( 'Brochure (%s)', 'school-master' ),
+				$brochure['size']
+			)
+			: __( 'Brochure', 'school-master' );
+
+		printf(
+			'<a class="%1$s btn--outline" href="%2$s" target="_blank" rel="noopener">%3$s<span class="screen-reader-text"> %4$s</span></a>',
+			esc_attr( $classes ),
+			esc_url( $brochure['url'] ),
+			esc_html( $label ),
+			esc_html( get_the_title() )
+		);
+	}
+
+	echo '</div>';
 }
 
 /**

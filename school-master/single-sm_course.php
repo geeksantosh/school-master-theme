@@ -49,6 +49,8 @@ while ( have_posts() ) :
 					</div>
 				<?php endif; ?>
 
+				<?php school_master_course_actions(); ?>
+
 				<div class="entry-content">
 					<?php the_content(); ?>
 				</div>

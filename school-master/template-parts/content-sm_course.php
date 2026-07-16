@@ -43,5 +43,6 @@ $fee      = smcore_get_meta( 'fee' );
 		<?php endif; ?>
 
 		<a class="card__link" href="<?php the_permalink(); ?>"><?php esc_html_e( 'View course', 'school-master' ); ?> &rarr;</a>
+		<?php school_master_course_actions( 'btn--sm' ); ?>
 	</div>
 </article>

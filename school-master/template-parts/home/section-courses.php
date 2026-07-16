@@ -68,6 +68,7 @@ if ( ! $courses->have_posts() ) {
 						</ul>
 
 						<a class="card__link" href="<?php the_permalink(); ?>"><?php esc_html_e( 'Learn more', 'school-master' ); ?> &rarr;</a>
+						<?php school_master_course_actions( 'btn--sm' ); ?>
 					</div>
 				</article>
 			<?php endwhile; ?>

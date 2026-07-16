@@ -73,6 +73,16 @@ class SMCore_Meta_Boxes {
 					'label' => __( 'Fee', 'school-master-core' ),
 					'type'  => 'text',
 				),
+				'apply_url'   => array(
+					'label' => __( 'Apply Online URL', 'school-master-core' ),
+					'type'  => 'url',
+					'desc'  => __( 'Optional. Adds an "Apply Now" button to this course. Link to your admission form or an external portal.', 'school-master-core' ),
+				),
+				'brochure'    => array(
+					'label' => __( 'Brochure (PDF)', 'school-master-core' ),
+					'type'  => 'file',
+					'desc'  => __( 'Optional. Adds a brochure download button showing the file size.', 'school-master-core' ),
+				),
 			),
 			'sm_faculty'     => array(
 				'designation'   => array(
