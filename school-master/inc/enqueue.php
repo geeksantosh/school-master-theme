@@ -8,6 +8,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Cache-busting version for a theme asset.
+ *
+ * SCHOOL_MASTER_VERSION alone is a constant, so an edited file keeps its old
+ * ?ver= and browsers — Safari especially — serve the cached copy indefinitely.
+ * The file's mtime changes whenever the file does, which is the whole point.
+ *
+ * @param string $relative_path Path below the theme root, leading slash.
+ * @return string
+ */
+function school_master_asset_version( $relative_path ) {
+	$file = SCHOOL_MASTER_DIR . $relative_path;
+	$time = file_exists( $file ) ? filemtime( $file ) : false;
+
+	return $time ? SCHOOL_MASTER_VERSION . '.' . $time : SCHOOL_MASTER_VERSION;
+}
+
+/**
  * Enqueue theme styles and scripts.
  *
  * @return void
@@ -18,7 +35,7 @@ function school_master_enqueue() {
 		'school-master',
 		SCHOOL_MASTER_URI . '/assets/css/theme.css',
 		array(),
-		SCHOOL_MASTER_VERSION
+		school_master_asset_version( '/assets/css/theme.css' )
 	);
 
 	// The style.css header file (screen-reader + alignment helpers).
@@ -26,7 +43,7 @@ function school_master_enqueue() {
 		'school-master-base',
 		get_stylesheet_uri(),
 		array( 'school-master' ),
-		SCHOOL_MASTER_VERSION
+		school_master_asset_version( '/style.css' )
 	);
 
 	// Dashicons power the "Why Choose Us" feature icons on the front end.
@@ -40,7 +57,7 @@ function school_master_enqueue() {
 		'school-master',
 		SCHOOL_MASTER_URI . '/assets/js/theme.js',
 		array(),
-		SCHOOL_MASTER_VERSION,
+		school_master_asset_version( '/assets/js/theme.js' ),
 		true
 	);
 

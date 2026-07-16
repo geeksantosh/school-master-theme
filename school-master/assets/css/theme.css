@@ -742,8 +742,13 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 	animation: sm-marquee-scroll var(--sm-marquee-duration, 40s) linear infinite;
 }
 [data-marquee-viewport].is-scrolling [data-marquee-track] > * { margin-right: 1.5rem; }
-[data-marquee-viewport].is-scrolling:hover [data-marquee-track],
 [data-marquee-viewport].is-scrolling:focus-within [data-marquee-track] { animation-play-state: paused; }
+/* Hover-pause is pointer-only: touch browsers latch :hover on tap and hold it
+   until the visitor taps elsewhere, which would strand the row mid-scroll.
+   :focus-within stays unguarded — a keyboard can be attached to a touchscreen. */
+@media (hover: hover) {
+	[data-marquee-viewport].is-scrolling:hover [data-marquee-track] { animation-play-state: paused; }
+}
 @keyframes sm-marquee-scroll {
 	from { transform: translateX(0); }
 	to { transform: translateX(-50%); }
@@ -982,8 +987,10 @@ h1, h2, h3, h4 { color: var(--sm-dark); line-height: 1.25; margin: 0 0 .5em; }
 	width: max-content;
 	animation: sm-ticker var(--sm-ticker-duration, 32s) linear infinite;
 }
-.notice-bar__viewport:hover .notice-bar__marquee,
 .notice-bar__viewport:focus-within .notice-bar__marquee { animation-play-state: paused; }
+@media (hover: hover) {
+	.notice-bar__viewport:hover .notice-bar__marquee { animation-play-state: paused; }
+}
 .notice-bar__track { display: flex; align-items: center; list-style: none; margin: 0; padding: 0; }
 .notice-bar__item { padding: .5rem 0; white-space: nowrap; }
 .notice-bar__item::after { content: "\2022"; color: var(--sm-muted); margin: 0 1.25rem; }

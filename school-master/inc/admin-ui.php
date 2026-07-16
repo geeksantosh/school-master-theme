@@ -29,7 +29,7 @@ function school_master_admin_assets() {
 		'school-master-admin',
 		SCHOOL_MASTER_URI . '/assets/css/admin.css',
 		array( 'dashicons' ),
-		SCHOOL_MASTER_VERSION
+		school_master_asset_version( '/assets/css/admin.css' )
 	);
 }
 add_action( 'admin_enqueue_scripts', 'school_master_admin_assets' );
