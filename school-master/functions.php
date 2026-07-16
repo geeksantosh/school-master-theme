@@ -26,6 +26,7 @@ require_once SCHOOL_MASTER_DIR . '/inc/class-school-master-nav-walker.php';
 if ( is_admin() ) {
 	require_once SCHOOL_MASTER_DIR . '/inc/plugin-notice.php';
 	require_once SCHOOL_MASTER_DIR . '/inc/demo-import.php';
+	require_once SCHOOL_MASTER_DIR . '/inc/admin-ui.php';
 	require_once SCHOOL_MASTER_DIR . '/inc/admin-video.php';
 	require_once SCHOOL_MASTER_DIR . '/inc/gallery-meta-box.php';
 	require_once SCHOOL_MASTER_DIR . '/inc/gallery-ajax.php';

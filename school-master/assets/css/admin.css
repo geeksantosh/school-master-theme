@@ -1,0 +1,348 @@
+/**
+ * School Master — admin brand layer.
+ *
+ * Recolours the WordPress admin in the school palette. Everything here is
+ * deliberately cosmetic: colour, radius, shadow, spacing. No positioning or
+ * sizing of core UI, and nothing targets block-editor internals
+ * (.components-*, .block-editor-*), so plugin screens and core updates keep
+ * working even when their markup changes underneath us.
+ *
+ * One colour rule: where core's colour IS the message — update-count bubbles,
+ * notice borders — we leave it alone. Those reds and ambers are how an admin
+ * spots a security update at a glance, and our accent gold already means
+ * "decorative" elsewhere in this file. Restyling them would cost a signal and
+ * buy nothing.
+ */
+
+:root {
+	--sm-a-primary: #0b5394;
+	--sm-a-primary-dark: #08406f;
+	--sm-a-accent: #e8a33d;
+	--sm-a-nav: #0b2545;
+	--sm-a-nav-hover: #14375f;
+	--sm-a-nav-deep: #081b33;
+	--sm-a-text: #24303f;
+	--sm-a-muted: #6b7280;
+	--sm-a-border: #e3e8ef;
+	--sm-a-bg: #f4f7fb;
+	--sm-a-radius: 10px;
+	--sm-a-shadow: 0 4px 16px rgba(11, 37, 69, 0.07);
+}
+
+/* -------------------------------------------------- Canvas */
+
+body.wp-admin {
+	background: var(--sm-a-bg);
+}
+
+.wrap h1,
+.wrap h2 {
+	color: var(--sm-a-nav);
+	font-weight: 600;
+}
+
+/* -------------------------------------------------- Admin bar */
+
+#wpadminbar {
+	background: var(--sm-a-nav);
+}
+
+#wpadminbar .ab-top-menu > li:hover > .ab-item,
+#wpadminbar .ab-top-menu > li.hover > .ab-item,
+#wpadminbar .ab-top-menu > li > .ab-item:focus,
+#wpadminbar .ab-top-menu > li.menupop.hover > .ab-item {
+	background: var(--sm-a-nav-hover);
+	color: #fff;
+}
+
+#wpadminbar .ab-submenu,
+#wpadminbar .menupop .ab-sub-wrapper {
+	background: var(--sm-a-nav-deep);
+}
+
+#wpadminbar .ab-top-menu > li > .ab-item:focus .ab-icon:before,
+#wpadminbar .ab-icon:before,
+#wpadminbar .ab-item:before {
+	color: rgba(255, 255, 255, 0.75);
+}
+
+/* -------------------------------------------------- Side menu */
+
+#adminmenuback,
+#adminmenuwrap,
+#adminmenu,
+#adminmenu .wp-submenu {
+	background: var(--sm-a-nav);
+}
+
+#adminmenu a {
+	color: rgba(255, 255, 255, 0.85);
+}
+
+#adminmenu div.wp-menu-image:before {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+#adminmenu li.menu-top:hover,
+#adminmenu li.opensub > a.menu-top,
+#adminmenu li > a.menu-top:focus {
+	background: var(--sm-a-nav-hover);
+	color: #fff;
+}
+
+#adminmenu li.menu-top:hover div.wp-menu-image:before,
+#adminmenu li.opensub > a.menu-top div.wp-menu-image:before {
+	color: var(--sm-a-accent);
+}
+
+/* Active section: gold rail makes "where am I" readable at a glance. */
+#adminmenu li.current a.menu-top,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu,
+#adminmenu li.wp-has-current-submenu .wp-submenu .wp-submenu-head,
+#adminmenu a.current:after {
+	background: var(--sm-a-primary);
+	color: #fff;
+	box-shadow: inset 4px 0 0 var(--sm-a-accent);
+}
+
+#adminmenu li.current a.menu-top div.wp-menu-image:before,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu div.wp-menu-image:before {
+	color: var(--sm-a-accent);
+}
+
+#adminmenu .wp-submenu,
+#adminmenu .wp-has-current-submenu .wp-submenu,
+#adminmenu a.wp-has-current-submenu:focus + .wp-submenu,
+.folded #adminmenu .wp-has-current-submenu .wp-submenu {
+	background: var(--sm-a-nav-deep);
+}
+
+#adminmenu .wp-submenu a:hover,
+#adminmenu .wp-submenu a:focus {
+	color: var(--sm-a-accent);
+}
+
+#adminmenu .wp-submenu li.current a,
+#adminmenu .wp-submenu li.current a:hover {
+	color: #fff;
+	font-weight: 600;
+}
+
+#adminmenu li.wp-menu-separator {
+	background: rgba(255, 255, 255, 0.08);
+	height: 1px;
+	margin: 8px 0;
+}
+
+#collapse-button {
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* Bubble counts (pending updates/comments) are deliberately NOT restyled.
+   Core paints them alert orange because they mean "act now" — including
+   security releases. Our accent gold is decorative here (menu rail, focus
+   rings), so reusing it would turn a signal into brand furniture. */
+
+/* -------------------------------------------------- Buttons */
+
+.wp-core-ui .button-primary {
+	background: var(--sm-a-primary);
+	border-color: var(--sm-a-primary);
+	color: #fff;
+	border-radius: 6px;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.wp-core-ui .button-primary:hover,
+.wp-core-ui .button-primary:focus {
+	background: var(--sm-a-primary-dark);
+	border-color: var(--sm-a-primary-dark);
+	color: #fff;
+}
+
+.wp-core-ui .button-primary:focus {
+	box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sm-a-accent);
+}
+
+.wp-core-ui .button,
+.wp-core-ui .button-secondary {
+	border-radius: 6px;
+	border-color: #c8d2de;
+	color: var(--sm-a-primary);
+}
+
+.wp-core-ui .button:hover,
+.wp-core-ui .button-secondary:hover {
+	border-color: var(--sm-a-primary);
+	color: var(--sm-a-primary-dark);
+}
+
+/* -------------------------------------------------- Links */
+
+a {
+	color: var(--sm-a-primary);
+}
+
+a:hover,
+a:active,
+a:focus {
+	color: var(--sm-a-primary-dark);
+}
+
+/* -------------------------------------------------- Boxes & tables */
+
+/* No `overflow: hidden` here on purpose: meta boxes host date pickers and
+   media dropdowns that legitimately overflow their box, and clipping them
+   would break the control rather than just restyle it. */
+.postbox,
+.card,
+.wp-list-table,
+#dashboard-widgets .postbox {
+	border: 1px solid var(--sm-a-border);
+	border-radius: var(--sm-a-radius);
+	box-shadow: var(--sm-a-shadow);
+}
+
+.postbox .postbox-header {
+	border-bottom: 1px solid var(--sm-a-border);
+	background: #fff;
+}
+
+.postbox .hndle,
+.postbox h2.hndle {
+	color: var(--sm-a-nav);
+	font-weight: 600;
+}
+
+.wp-list-table thead th,
+.wp-list-table thead td,
+.wp-list-table tfoot th,
+.wp-list-table tfoot td {
+	background: #fbfcfe;
+	color: var(--sm-a-nav);
+}
+
+.wp-list-table thead th a,
+.wp-list-table tfoot th a {
+	color: var(--sm-a-nav);
+}
+
+.striped > tbody > :nth-child(odd),
+.alternate {
+	background: #fafcfe;
+}
+
+.wp-list-table tbody tr:hover {
+	background: #eef4fb;
+}
+
+/* -------------------------------------------------- Notices */
+
+/* Shape only. The left-border colours are core's (green/amber/blue/red) and
+   they carry the meaning of the notice, so they stay core's — a warning must
+   not read as "on brand". */
+.notice,
+div.updated,
+div.error {
+	border-radius: 8px;
+	border-left-width: 4px;
+	box-shadow: var(--sm-a-shadow);
+}
+
+/* -------------------------------------------------- Form tables */
+
+.form-table th {
+	color: var(--sm-a-nav);
+	font-weight: 600;
+}
+
+.form-table input[type="text"],
+.form-table input[type="url"],
+.form-table input[type="email"],
+.form-table input[type="number"],
+.form-table textarea,
+.form-table select {
+	border-radius: 6px;
+	border-color: #c8d2de;
+}
+
+.form-table input[type="text"]:focus,
+.form-table input[type="url"]:focus,
+.form-table input[type="email"]:focus,
+.form-table input[type="number"]:focus,
+.form-table textarea:focus,
+.form-table select:focus {
+	border-color: var(--sm-a-primary);
+	box-shadow: 0 0 0 1px var(--sm-a-primary);
+}
+
+/* -------------------------------------------------- Dashboard shortcuts */
+
+.sm-shortcuts__intro {
+	margin: 0 0 1rem;
+	color: var(--sm-a-muted);
+}
+
+.sm-shortcuts__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+	gap: 12px;
+}
+
+.sm-shortcut {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 6px;
+	padding: 16px;
+	border: 1px solid var(--sm-a-border);
+	border-radius: var(--sm-a-radius);
+	background: #fff;
+	text-decoration: none;
+	color: var(--sm-a-nav);
+	transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+
+.sm-shortcut:hover,
+.sm-shortcut:focus {
+	border-color: var(--sm-a-primary);
+	box-shadow: var(--sm-a-shadow);
+	transform: translateY(-2px);
+	color: var(--sm-a-nav);
+}
+
+.sm-shortcut:focus-visible {
+	outline: 2px solid var(--sm-a-accent);
+	outline-offset: 2px;
+}
+
+.sm-shortcut .dashicons {
+	font-size: 26px;
+	width: 26px;
+	height: 26px;
+	color: var(--sm-a-primary);
+}
+
+.sm-shortcut__label {
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 1.3;
+}
+
+.sm-shortcut__desc {
+	font-size: 12px;
+	color: var(--sm-a-muted);
+	line-height: 1.4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.sm-shortcut {
+		transition: none;
+	}
+
+	.sm-shortcut:hover,
+	.sm-shortcut:focus {
+		transform: none;
+	}
+}
