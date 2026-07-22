@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$title = school_master_option( 'welcome_title' );
+$title = school_master_option( 'welcome_title', __( 'Welcome to Our Institution', 'school-master' ) );
 $text  = school_master_option( 'welcome_text' );
 $image = school_master_option( 'welcome_image' );
 

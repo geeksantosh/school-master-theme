@@ -7,8 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$title    = school_master_option( 'cta_title' );
-$btn_text = school_master_option( 'cta_btn_text' );
+$title    = school_master_option( 'cta_title', __( 'Ready to Apply?', 'school-master' ) );
+$btn_text = school_master_option( 'cta_btn_text', __( 'Apply Now', 'school-master' ) );
 $btn_url  = school_master_option( 'cta_btn_url' );
 
 if ( ! $title ) {

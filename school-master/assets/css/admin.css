@@ -9,24 +9,28 @@
  *
  * One colour rule: where core's colour IS the message — update-count bubbles,
  * notice borders — we leave it alone. Those reds and ambers are how an admin
- * spots a security update at a glance, and our accent gold already means
- * "decorative" elsewhere in this file. Restyling them would cost a signal and
- * buy nothing.
+ * spots a security update at a glance, and our accent orange only ever means
+ * "decorative" in this file — it never carries state. Restyling core's signals
+ * would cost a signal and buy nothing.
+ *
+ * Values mirror the front-end brand defaults in inc/enqueue.php. This file is
+ * static CSS, so the Customizer colours do not reach it; if a school rebrands
+ * hard, these are the six lines to follow.
  */
 
 :root {
-	--sm-a-primary: #0b5394;
-	--sm-a-primary-dark: #08406f;
-	--sm-a-accent: #e8a33d;
-	--sm-a-nav: #0b2545;
-	--sm-a-nav-hover: #14375f;
-	--sm-a-nav-deep: #081b33;
-	--sm-a-text: #24303f;
-	--sm-a-muted: #6b7280;
-	--sm-a-border: #e3e8ef;
-	--sm-a-bg: #f4f7fb;
+	--sm-a-primary: #26236c;
+	--sm-a-primary-dark: #1b1852;
+	--sm-a-accent: #f25708;
+	--sm-a-nav: #1b1852;
+	--sm-a-nav-hover: #312d8b;
+	--sm-a-nav-deep: #121036;
+	--sm-a-text: #3a3f55;
+	--sm-a-muted: #757b8f;
+	--sm-a-border: #e4e9f2;
+	--sm-a-bg: #f4f7fa;
 	--sm-a-radius: 10px;
-	--sm-a-shadow: 0 4px 16px rgba(11, 37, 69, 0.07);
+	--sm-a-shadow: 0 4px 16px rgba(27, 24, 82, 0.07);
 }
 
 /* -------------------------------------------------- Canvas */
@@ -145,11 +149,21 @@ body.wp-admin {
 
 /* -------------------------------------------------- Buttons */
 
+/* Shape is shared; colour is not. Core writes primary buttons as
+   `class="button button-primary"`, so `.wp-core-ui .button` and
+   `.wp-core-ui .button-primary` are both 0,2,0 and the later one wins — a plain
+   `.button` colour rule below would paint primary labels in the primary colour,
+   on a primary background. The `:not()` below keeps the two sets disjoint. */
+.wp-core-ui .button,
+.wp-core-ui .button-primary,
+.wp-core-ui .button-secondary {
+	border-radius: 6px;
+}
+
 .wp-core-ui .button-primary {
 	background: var(--sm-a-primary);
 	border-color: var(--sm-a-primary);
 	color: #fff;
-	border-radius: 6px;
 	text-shadow: none;
 	box-shadow: none;
 }
@@ -165,14 +179,13 @@ body.wp-admin {
 	box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--sm-a-accent);
 }
 
-.wp-core-ui .button,
+.wp-core-ui .button:not(.button-primary),
 .wp-core-ui .button-secondary {
-	border-radius: 6px;
 	border-color: #c8d2de;
 	color: var(--sm-a-primary);
 }
 
-.wp-core-ui .button:hover,
+.wp-core-ui .button:not(.button-primary):hover,
 .wp-core-ui .button-secondary:hover {
 	border-color: var(--sm-a-primary);
 	color: var(--sm-a-primary-dark);

@@ -195,9 +195,9 @@ function school_master_customize_register( $wp_customize ) {
 		)
 	);
 	$colors = array(
-		'primary_color'   => array( __( 'Primary Color', 'school-master' ), '#0b5394' ),
-		'secondary_color' => array( __( 'Secondary / Accent Color', 'school-master' ), '#e8a33d' ),
-		'dark_color'      => array( __( 'Dark Color (footer, headings)', 'school-master' ), '#0b2545' ),
+		'primary_color'   => array( __( 'Primary Color', 'school-master' ), '#26236c' ),
+		'secondary_color' => array( __( 'Secondary / Accent Color', 'school-master' ), '#f25708' ),
+		'dark_color'      => array( __( 'Dark Color (footer, headings)', 'school-master' ), '#1b1852' ),
 	);
 	foreach ( $colors as $id => $data ) {
 		$wp_customize->add_setting(

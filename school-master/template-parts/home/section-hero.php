@@ -9,8 +9,8 @@ defined( 'ABSPATH' ) || exit;
 
 $type     = school_master_option( 'hero_type', 'image' );
 $title    = school_master_option( 'hero_title', __( 'Welcome to Our Campus', 'school-master' ) );
-$subtitle = school_master_option( 'hero_subtitle' );
-$btn_text = school_master_option( 'hero_btn_text' );
+$subtitle = school_master_option( 'hero_subtitle', __( 'Enlightenment through Education', 'school-master' ) );
+$btn_text = school_master_option( 'hero_btn_text', __( 'Explore Courses', 'school-master' ) );
 $btn_url  = school_master_option( 'hero_btn_url' );
 $image    = school_master_option( 'hero_image' );
 $video    = school_master_option( 'hero_video_url' );
