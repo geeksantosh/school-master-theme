@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name:       School Master Core
- * Plugin URI:        https://example.com/school-master
+ * Plugin URI:        https://github.com/geeksantosh/school-master-theme
  * Description:       Companion plugin for the School Master theme. Registers all content types (Notices, Courses, Faculty, Events, Gallery, Downloads, Testimonials, Partners), their taxonomies and meta. Keeping this data in a plugin means a school never loses content when switching or updating themes.
  * Version:           1.0.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
- * Author:            School Master
- * Author URI:        https://example.com
+ * Author:            Santosh Adhikari
+ * Author URI:        https://github.com/geeksantosh
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       school-master-core
